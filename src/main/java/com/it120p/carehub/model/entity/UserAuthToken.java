@@ -12,5 +12,5 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Embeddable
 public class UserAuthToken {
-    protected String authToken = "abc";
+    protected String authToken = "";
 }

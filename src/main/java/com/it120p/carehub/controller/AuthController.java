@@ -1,10 +1,13 @@
 package com.it120p.carehub.controller;
 
 import com.it120p.carehub.exceptions.EmailAlreadyExistException;
+import com.it120p.carehub.exceptions.EmailMissingException;
+import com.it120p.carehub.model.dto.UserLoginDTO;
 import com.it120p.carehub.model.dto.UserRegisterDTO;
 import com.it120p.carehub.model.entity.User;
 import com.it120p.carehub.service.AuthService;
 import com.it120p.carehub.service.UserService;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -47,4 +50,32 @@ public class AuthController {
         // Return DTO
         return UserRegisterDTO.fromUser(updateUser);
     }
+
+    @PostMapping("/login")
+    public UserLoginDTO loginAccount(
+            @RequestParam(name = "email") String email,
+            @RequestParam(name = "password") String password
+    ) throws Exception {
+
+        // Check if email exists
+        if (!userService.isUserExistByEmail(email)) {
+            throw new EmailMissingException();
+        }
+
+        // Login user+email
+        String jwtToken = authService.loginUser(email, password);
+
+        // Check if login successful
+        if (jwtToken.isEmpty()) {
+            throw new AuthenticationException("User unable to authenticate");
+        }
+
+        // Return UserLoginResponseDTO
+        return UserLoginDTO.builder()
+                .email(email)
+                .token(jwtToken)
+                .build();
+    }
+
+
 }

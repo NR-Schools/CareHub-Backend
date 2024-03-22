@@ -5,10 +5,14 @@ import com.it120p.carehub.model.entity.UserAuthToken;
 import com.it120p.carehub.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -37,4 +41,35 @@ public class AuthService {
         return userRepository.save(user);
     }
 
+    public String loginUser(String email, String password) {
+        String token = "";
+
+        // Attempt Authentication
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            email,
+                            password
+                    )
+            );
+
+            // Create JWT
+            token = jwtService.generateToken(
+                    (UserDetails) authentication.getPrincipal()
+            );
+
+            // Add created token to allowedTokens
+            Optional<User> optLoggedUser = userRepository.findUserByEmail(email);
+
+            if (optLoggedUser.isEmpty()) throw new Exception("User does not exist!");
+
+            optLoggedUser.get().getUserAuthTokens().add(new UserAuthToken(token));
+            userRepository.save(optLoggedUser.get());
+
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            ex.printStackTrace();
+        }
+        return token;
+    }
 }
