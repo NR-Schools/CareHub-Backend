@@ -1,7 +1,8 @@
 package com.it120p.carehub.model.entity;
 
-import jakarta.persistence.Column;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,10 +10,15 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
+@Data
+@Builder
+@Entity
+@Table(name = "users")
 public class User implements UserDetails {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long userId;
 
     @Column(unique = true)
     private String email;
