@@ -1,8 +1,10 @@
 package com.it120p.carehub.model.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,6 +13,8 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "users")
@@ -20,12 +24,22 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long userId;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String password;
     private String name;
     private String contactNo;
     private LocalDate birthDate;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "user_auth_tokens",
+            joinColumns = @JoinColumn(name = "user_id"),
+            foreignKey = @ForeignKey(name = "user_auth_token_fk")
+    )
+    private List<UserAuthToken> userAuthTokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
