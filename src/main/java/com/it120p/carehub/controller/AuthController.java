@@ -10,6 +10,8 @@ import com.it120p.carehub.service.UserService;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -77,5 +79,13 @@ public class AuthController {
                 .build();
     }
 
+    @PostMapping(path = "/logout")
+    public void logoutUser(Authentication authentication) {
 
+        // Logout User
+        String email = ((UserDetails) authentication.getPrincipal()).getUsername();
+        String token = (String) authentication.getDetails();
+
+        authService.logoutUser(email, token);
+    }
 }

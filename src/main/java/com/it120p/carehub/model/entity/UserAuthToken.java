@@ -1,5 +1,6 @@
 package com.it120p.carehub.model.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,5 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Embeddable
 public class UserAuthToken {
-    protected String authToken = "";
+
+    @Column(nullable = false)
+    protected String authToken;
 }

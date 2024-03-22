@@ -72,4 +72,15 @@ public class AuthService {
         }
         return token;
     }
+
+    public boolean logoutUser(String email, String token) {
+        // Remove token from allowedTokens
+        Optional<User> optionalUser = userRepository.findUserByEmail(email);
+        if (optionalUser.isEmpty()) return false;
+
+        optionalUser.get().getUserAuthTokens().remove(new UserAuthToken(token));
+        userRepository.save(optionalUser.get());
+        return true;
+    }
+
 }
