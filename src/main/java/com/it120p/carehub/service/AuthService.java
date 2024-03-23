@@ -36,7 +36,6 @@ public class AuthService {
                 .build();
 
         user.setUserAuthTokens(new ArrayList<>());
-        user.getUserAuthTokens().add(new UserAuthToken());
 
         return userRepository.save(user);
     }
