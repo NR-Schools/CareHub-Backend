@@ -29,9 +29,14 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
     private String name;
     private String contactNo;
     private LocalDate birthDate;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private UserCareService userCareService;
 
     @ElementCollection
     @CollectionTable(
@@ -40,6 +45,7 @@ public class User implements UserDetails {
             foreignKey = @ForeignKey(name = "user_auth_token_fk")
     )
     private List<UserAuthToken> userAuthTokens;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
