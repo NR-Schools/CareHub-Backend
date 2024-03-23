@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ControllerException {
+
     @ExceptionHandler(value = BaseException.class)
     public ResponseEntity<ErrorResponse> handleDefinedExceptions(
             BaseException ex
@@ -18,6 +19,21 @@ public class ControllerException {
                         ErrorResponse
                                 .builder()
                                 .errorSource(ex.getExceptionType())
+                                .errorMessage(ex.getMessage())
+                                .build()
+                );
+    }
+
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<ErrorResponse> handleRemainingExceptions(
+            Exception ex
+    ) {
+        return ResponseEntity
+                .status(500)
+                .body(
+                        ErrorResponse
+                                .builder()
+                                .errorSource(ex.getClass().getSimpleName())
                                 .errorMessage(ex.getMessage())
                                 .build()
                 );
