@@ -34,11 +34,10 @@ public class User implements UserDetails {
     private String contactNo;
     private LocalDate birthDate;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private UserCareService userCareService;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserServiceCare userServiceCare;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "user_auth_tokens",
             joinColumns = @JoinColumn(name = "user_id"),

@@ -1,7 +1,7 @@
 package com.it120p.carehub.controller;
 
-import com.it120p.carehub.exceptions.EmailAlreadyExistException;
-import com.it120p.carehub.exceptions.EmailMissingException;
+import com.it120p.carehub.exceptions.AlreadyExistException;
+import com.it120p.carehub.exceptions.MissingException;
 import com.it120p.carehub.model.dto.UserLoginDTO;
 import com.it120p.carehub.model.dto.UserRegisterDTO;
 import com.it120p.carehub.model.entity.User;
@@ -37,7 +37,7 @@ public class AuthController {
 
         // Check if email is unique
         if (userService.isUserExistByEmail(email)) {
-            throw new EmailAlreadyExistException();
+            throw new AlreadyExistException("Email");
         }
 
         // Initial Registration of email
@@ -61,7 +61,7 @@ public class AuthController {
 
         // Check if email exists
         if (!userService.isUserExistByEmail(email)) {
-            throw new EmailMissingException();
+            throw new MissingException("Email");
         }
 
         // Login user+email

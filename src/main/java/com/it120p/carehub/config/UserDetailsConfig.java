@@ -14,7 +14,7 @@ public class UserDetailsConfig {
     private final UserRepository userRepository;
 
     @Bean
-    public UserDetailsService userDetailsService() {
+    public UserDetailsService loadUserByUsername() {
         return username -> userRepository.findUserByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User does not exists!"));
     }

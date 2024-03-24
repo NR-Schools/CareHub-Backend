@@ -1,6 +1,7 @@
 package com.it120p.carehub.service;
 
 import com.it120p.carehub.model.entity.User;
+import com.it120p.carehub.model.entity.UserAuthToken;
 import com.it120p.carehub.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -48,24 +49,25 @@ public class JwtService {
     public boolean isTokenAllowedByUser(String email, String token) {
         Optional<User> optionalUser = userRepository.findUserByEmail(email);
         if (optionalUser.isEmpty()) return false;
-        return true;
 
         // Perform Token Validation Checks
-        //List<String> updatedAllowedTokens = new ArrayList<>();
-        //List<String> allowedTokens = optionalUser.get().getLogState().getAllowedTokens();
-        //allowedTokens.forEach(allowedToken -> {
+        List<UserAuthToken> updatedAllowedTokens = new ArrayList<>();
+        List<UserAuthToken> allowedTokens = optionalUser.get().getUserAuthTokens();
+        allowedTokens.forEach(allowedToken -> {
             // Check if token is still valid
-        //    if (isTokenValid(allowedToken)) {
-        //        updatedAllowedTokens.add(allowedToken);
-        //    }
-        //});
+            if (isTokenValid(allowedToken.getAuthToken())) {
+                updatedAllowedTokens.add(allowedToken);
+            }
+        });
 
         // Update Allowed Tokens
-        //optionalUser.get().getLogState().setAllowedTokens(updatedAllowedTokens);
-        //userRepository.save(optionalUser.get());
+        optionalUser.get().setUserAuthTokens(updatedAllowedTokens);
+        userRepository.save(optionalUser.get());
 
         // Find Token
-        //return updatedAllowedTokens.contains(token);
+        return updatedAllowedTokens.stream().anyMatch(
+                userAuthToken -> userAuthToken.getAuthToken().equals(token)
+        );
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
