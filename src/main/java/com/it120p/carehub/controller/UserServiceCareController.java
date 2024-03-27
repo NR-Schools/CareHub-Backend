@@ -38,7 +38,6 @@ public class UserServiceCareController {
         UserServiceCare userServiceCare = UserServiceCare.builder()
                 .type(type)
                 .description(description)
-                .location(location)
                 .offerings(offerings)
                 .build();
         user.setUserServiceCare(userServiceCare);
@@ -78,7 +77,6 @@ public class UserServiceCareController {
         UserServiceCare userServiceCare = UserServiceCare.builder()
                 .type(type)
                 .description(description)
-                .location(location)
                 .offerings(offerings)
                 .build();
         user.setUserServiceCare(userServiceCare);

@@ -16,8 +16,6 @@ public class Request {
 
     private String requestDetails;
 
-    private String requestLocation;
-
     @Enumerated(EnumType.STRING)
     private Status requestStatus;
 }

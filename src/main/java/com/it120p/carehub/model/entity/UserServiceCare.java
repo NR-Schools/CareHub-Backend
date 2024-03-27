@@ -22,7 +22,6 @@ public class UserServiceCare {
 
     private String type;
     private String description;
-    private String location;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> offerings;
