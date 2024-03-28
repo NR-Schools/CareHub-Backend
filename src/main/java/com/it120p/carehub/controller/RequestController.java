@@ -12,6 +12,7 @@ import java.util.List;
 
 
 @RestController
+@RequestMapping("/request")
 public class RequestController {
 
     @Autowired
@@ -36,11 +37,20 @@ public class RequestController {
         return requestService.saveRequest(newRequest);
     }
 
-    @GetMapping("")
-    public List<Request> getCustomerRequests(
+    @GetMapping("/all")
+    public List<Request> getAllCustomerRequests() {
+        return requestService.getAllRequests();
+    }
+
+    @GetMapping("/user")
+    public List<Request> getCustomerRequestsById(
             Authentication authentication
     ) {
-        return List.of();
+        // Get User from Authentication
+        User user = (User) authentication.getPrincipal();
+
+        // Get Request by Id
+        return requestService.getRequestsByUserId(user.getUserId());
     }
 
     @PutMapping("")
