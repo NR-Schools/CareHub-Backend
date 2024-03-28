@@ -1,5 +1,6 @@
 package com.it120p.carehub.controller;
 
+import com.it120p.carehub.exceptions.StatusException;
 import com.it120p.carehub.model.entity.Request;
 import com.it120p.carehub.model.entity.Status;
 import com.it120p.carehub.model.entity.User;
@@ -58,15 +59,59 @@ public class RequestController {
             Authentication authentication,
             @RequestParam("requestId") long requestId,
             @RequestParam("requestDetails") String requestDetails
-    ) {
-        return null;
+    ) throws Exception {
+        // Get User from Authentication
+        User user = (User) authentication.getPrincipal();
+
+        // Fetch existing Request
+        Request existingRequest = requestService.getRequestFromUser(
+                user.getUserId(),
+                requestId
+        );
+
+        // Must still be pending
+        if ( existingRequest.getRequestStatus() != Status.PENDING ) {
+            throw new StatusException(
+                    "Request",
+                    Status.PENDING.name(),
+                    existingRequest.getRequestStatus().name()
+            );
+        }
+
+        // Update existing Request
+        existingRequest.setRequestDetails(requestDetails);
+
+        // Save Request
+        return requestService.saveRequest(existingRequest);
     }
 
     @DeleteMapping("")
     public Request deleteCustomerRequest(
             Authentication authentication,
             @RequestParam("requestId") long requestId
-    ) {
-        return null;
+    ) throws Exception {
+        // Get User from Authentication
+        User user = (User) authentication.getPrincipal();
+
+        // Fetch existing Request
+        Request existingRequest = requestService.getRequestFromUser(
+                user.getUserId(),
+                requestId
+        );
+
+        // Must still be pending
+        if ( existingRequest.getRequestStatus() != Status.PENDING ) {
+            throw new StatusException(
+                    "Request",
+                    Status.PENDING.name(),
+                    existingRequest.getRequestStatus().name()
+            );
+        }
+
+        // Remove Request
+        return requestService.removeRequestFromUser(
+                user.getUserId(),
+                requestId
+        );
     }
 }

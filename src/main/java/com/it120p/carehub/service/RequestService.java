@@ -23,6 +23,16 @@ public class RequestService {
     }
 
     public List<Request> getRequestsByUserId(long userId) {
-        return requestRepository.findRequestByUserId(userId);
+        return requestRepository.findRequestsByUserId(userId);
+    }
+
+    public Request getRequestFromUser(long userId, long requestId) {
+        return requestRepository.findRequestByUserIdAndRequestId(userId, requestId).orElseThrow();
+    }
+
+    public Request removeRequestFromUser(long userId, long requestId) {
+        Request request = requestRepository.findRequestByUserIdAndRequestId(userId, requestId).orElseThrow();
+        requestRepository.delete(request);
+        return request;
     }
 }

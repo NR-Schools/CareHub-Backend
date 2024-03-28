@@ -12,5 +12,9 @@ import java.util.Optional;
 public interface RequestRepository extends CrudRepository<Request, Long> {
 
     @Query("SELECT r FROM Request r WHERE r.userId = ?1")
-    List<Request> findRequestByUserId(long userId);
+    List<Request> findRequestsByUserId(long userId);
+
+    @Query("SELECT r FROM Request r WHERE r.userId = ?1 AND r.requestId = ?2")
+    Optional<Request> findRequestByUserIdAndRequestId(long userId, long requestId);
+
 }
