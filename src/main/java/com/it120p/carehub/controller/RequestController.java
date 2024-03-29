@@ -51,7 +51,7 @@ public class RequestController {
         User user = (User) authentication.getPrincipal();
 
         // Get Request by Id
-        return requestService.getRequestsByUserId(user.getUserId());
+        return requestService.getRequestsByUser(user);
     }
 
     @PutMapping("")
@@ -65,7 +65,7 @@ public class RequestController {
 
         // Fetch existing Request
         Request existingRequest = requestService.getRequestFromUser(
-                user.getUserId(),
+                user,
                 requestId
         );
 
@@ -95,7 +95,7 @@ public class RequestController {
 
         // Fetch existing Request
         Request existingRequest = requestService.getRequestFromUser(
-                user.getUserId(),
+                user,
                 requestId
         );
 
@@ -110,7 +110,7 @@ public class RequestController {
 
         // Remove Request
         return requestService.removeRequestFromUser(
-                user.getUserId(),
+                user,
                 requestId
         );
     }

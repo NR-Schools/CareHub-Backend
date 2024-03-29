@@ -1,6 +1,7 @@
 package com.it120p.carehub.service;
 
 import com.it120p.carehub.model.entity.Request;
+import com.it120p.carehub.model.entity.User;
 import com.it120p.carehub.repository.RequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
@@ -22,16 +23,16 @@ public class RequestService {
         return Streamable.of(requestRepository.findAll()).toList();
     }
 
-    public List<Request> getRequestsByUserId(long userId) {
-        return requestRepository.findRequestsByUserId(userId);
+    public List<Request> getRequestsByUser(User customer) {
+        return requestRepository.findRequestsByUser(customer);
     }
 
-    public Request getRequestFromUser(long userId, long requestId) {
-        return requestRepository.findRequestByUserIdAndRequestId(userId, requestId).orElseThrow();
+    public Request getRequestFromUser(User customer, long requestId) {
+        return requestRepository.findRequestByUserIdAndRequestId(customer, requestId).orElseThrow();
     }
 
-    public Request removeRequestFromUser(long userId, long requestId) {
-        Request request = requestRepository.findRequestByUserIdAndRequestId(userId, requestId).orElseThrow();
+    public Request removeRequestFromUser(User customer, long requestId) {
+        Request request = requestRepository.findRequestByUserIdAndRequestId(customer, requestId).orElseThrow();
         requestRepository.delete(request);
         return request;
     }
