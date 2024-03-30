@@ -15,7 +15,7 @@ public interface RequestRepository extends CrudRepository<Request, Long> {
     @Query("SELECT r FROM Request r WHERE r.customer = ?1")
     List<Request> findRequestsByUser(User customer);
 
-    @Query("SELECT r FROM Request r WHERE r.customer = ?1 AND r.requestId = ?2")
-    Optional<Request> findRequestByUserIdAndRequestId(User customer, long requestId);
+    @Query("SELECT r FROM Request r WHERE r.requestId = ?1")
+    Optional<Request> findRequestById(long requestId);
 
 }

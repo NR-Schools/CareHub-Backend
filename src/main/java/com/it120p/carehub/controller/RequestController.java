@@ -64,7 +64,7 @@ public class RequestController {
         User user = (User) authentication.getPrincipal();
 
         // Fetch existing Request
-        Request existingRequest = requestService.getRequestFromUser(
+        Request existingRequest = requestService.getOwnedRequest(
                 user,
                 requestId
         );
@@ -94,7 +94,7 @@ public class RequestController {
         User user = (User) authentication.getPrincipal();
 
         // Fetch existing Request
-        Request existingRequest = requestService.getRequestFromUser(
+        Request existingRequest = requestService.getOwnedRequest(
                 user,
                 requestId
         );
@@ -109,7 +109,7 @@ public class RequestController {
         }
 
         // Remove Request
-        return requestService.removeRequestFromUser(
+        return requestService.removeOwnedRequest(
                 user,
                 requestId
         );
