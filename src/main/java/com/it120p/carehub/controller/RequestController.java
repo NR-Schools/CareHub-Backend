@@ -2,7 +2,8 @@ package com.it120p.carehub.controller;
 
 import com.it120p.carehub.exceptions.StatusException;
 import com.it120p.carehub.model.entity.Request;
-import com.it120p.carehub.model.entity.Status;
+import com.it120p.carehub.model.entity.OfferStatus;
+import com.it120p.carehub.model.entity.RequestStatus;
 import com.it120p.carehub.model.entity.User;
 import com.it120p.carehub.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class RequestController {
         // Create new Request
         Request newRequest = Request.builder()
                 .requestDetails(requestDetails)
-                .requestStatus(Status.PENDING)
+                .requestStatus(RequestStatus.OPEN)
                 .customer(user)
                 .build();
 
@@ -69,15 +70,6 @@ public class RequestController {
                 requestId
         );
 
-        // Must still be pending
-        if ( existingRequest.getRequestStatus() != Status.PENDING ) {
-            throw new StatusException(
-                    "Request",
-                    Status.PENDING.name(),
-                    existingRequest.getRequestStatus().name()
-            );
-        }
-
         // Update existing Request
         existingRequest.setRequestDetails(requestDetails);
 
@@ -92,21 +84,6 @@ public class RequestController {
     ) throws Exception {
         // Get User from Authentication
         User user = (User) authentication.getPrincipal();
-
-        // Fetch existing Request
-        Request existingRequest = requestService.getOwnedRequest(
-                user,
-                requestId
-        );
-
-        // Must still be pending
-        if ( existingRequest.getRequestStatus() != Status.PENDING ) {
-            throw new StatusException(
-                    "Request",
-                    Status.PENDING.name(),
-                    existingRequest.getRequestStatus().name()
-            );
-        }
 
         // Remove Request
         return requestService.removeOwnedRequest(
