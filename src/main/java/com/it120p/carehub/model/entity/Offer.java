@@ -21,5 +21,5 @@ public class Offer {
     private String offerDetails;
 
     @Enumerated(EnumType.STRING)
-    private Status offerStatus;
+    private OfferStatus offerStatus;
 }

@@ -25,5 +25,5 @@ public class Request {
     private String requestDetails;
 
     @Enumerated(EnumType.STRING)
-    private Status requestStatus;
+    private RequestStatus requestStatus;
 }
