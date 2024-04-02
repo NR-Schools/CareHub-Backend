@@ -35,7 +35,7 @@ public class User implements UserDetails {
     private LocalDate birthDate;
 
     // Temporarily store photo in database
-    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] photoBytes;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
