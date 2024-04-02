@@ -41,36 +41,22 @@ public class UserController {
             Authentication authentication,
             @RequestParam(name = "name", required = false) String name,
             @RequestParam(name = "birthDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthDate,
-            @RequestParam(name = "email") String email,
-            @RequestParam(name = "password", required = false) String password,
             @RequestParam(name = "contactNo", required = false) String contactNo,
             @RequestPart(name = "profilePic", required = false) MultipartFile profilePic
     ) throws Exception {
+
         String userEmail = ((UserDetails) authentication.getPrincipal()).getUsername();
         User user = userService.getUserByEmail(userEmail);
+
         if (user == null) throw new MissingException("User");
 
         // Update user information
-        if (name != null) {
-            user.setName(name);
-        }
-        if (birthDate != null) {
-            user.setBirthDate(birthDate);
-        }
-        if (email != null) {
-            user.setEmail(email);
-        }
-        if (password != null) {
-            user.setPassword(password);
-        }
-        if (contactNo != null) {
-            user.setContactNo(contactNo);
-        }
-        if (profilePic != null) {
-            user.setPhotoBytes(profilePic.getBytes());
-        }
+        if (name != null) user.setName(name);
+        if (birthDate != null) user.setBirthDate(birthDate);
+        if (contactNo != null) user.setContactNo(contactNo);
+        if (profilePic != null) user.setPhotoBytes(profilePic.getBytes());
 
-        userService.updateUser(user);
-        return UserInfoDTO.fromUser(user);
+        User updatedUser = userService.updateUser(user);
+        return UserInfoDTO.fromUser(updatedUser);
     }
 }
