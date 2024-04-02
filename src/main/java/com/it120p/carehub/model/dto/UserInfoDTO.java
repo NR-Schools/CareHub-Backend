@@ -8,18 +8,20 @@ import java.time.LocalDate;
 
 @Data
 @Builder
-public class UserRegisterDTO {
+public class UserInfoDTO {
     private String email;
     private String name;
     private String contactNo;
     private LocalDate birthDate;
+    private byte[] photoBytes;
 
-    public static UserRegisterDTO fromUser(User user) {
-        return UserRegisterDTO.builder()
+    public static UserInfoDTO fromUser(User user) {
+        return UserInfoDTO.builder()
                 .email(user.getEmail())
                 .name(user.getName())
                 .contactNo(user.getContactNo())
                 .birthDate(user.getBirthDate())
+                .photoBytes(user.getPhotoBytes())
                 .build();
     }
 }

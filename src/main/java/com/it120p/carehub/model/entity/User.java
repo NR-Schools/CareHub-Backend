@@ -34,6 +34,10 @@ public class User implements UserDetails {
     private String contactNo;
     private LocalDate birthDate;
 
+    // Temporarily store photo in database
+    @Lob
+    private byte[] photoBytes;
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private UserServiceCare userServiceCare;
 

@@ -3,7 +3,7 @@ package com.it120p.carehub.controller;
 import com.it120p.carehub.exceptions.AlreadyExistException;
 import com.it120p.carehub.exceptions.MissingException;
 import com.it120p.carehub.model.dto.UserLoginDTO;
-import com.it120p.carehub.model.dto.UserRegisterDTO;
+import com.it120p.carehub.model.dto.UserInfoDTO;
 import com.it120p.carehub.model.entity.User;
 import com.it120p.carehub.service.AuthService;
 import com.it120p.carehub.service.UserService;
@@ -27,7 +27,7 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/register")
-    public UserRegisterDTO registerAccount(
+    public UserInfoDTO registerAccount(
             @RequestParam(name = "name") String name,
             @RequestParam(name = "email") String email,
             @RequestParam(name = "password") String password,
@@ -50,7 +50,7 @@ public class AuthController {
         User updateUser = userService.updateUser(newUser);
 
         // Return DTO
-        return UserRegisterDTO.fromUser(updateUser);
+        return UserInfoDTO.fromUser(updateUser);
     }
 
     @PostMapping("/login")
