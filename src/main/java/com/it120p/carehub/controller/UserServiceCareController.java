@@ -17,7 +17,7 @@ public class UserServiceCareController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/")
+    @PostMapping
     public void setUserService(
             Authentication authentication,
             @RequestParam(name = "type") String type,
@@ -45,8 +45,8 @@ public class UserServiceCareController {
         userService.updateUser(user);
     }
 
-    @GetMapping("/")
-    public UserServiceCare getUserService(
+    @GetMapping
+    public UserServiceCare getSelfUserService(
             Authentication authentication
     ) {
         // Get User from Authentication
@@ -56,7 +56,19 @@ public class UserServiceCareController {
         return user.getUserServiceCare();
     }
 
-    @PutMapping("/")
+    @GetMapping("/other")
+    public UserServiceCare getOtherUserService(
+            @RequestParam(name = "email") String email
+    ) throws Exception {
+        // Get other user
+        User otherUser = userService.getUserByEmail(email);
+
+        if (otherUser == null) throw new MissingException("User");
+
+        return otherUser.getUserServiceCare();
+    }
+
+    @PutMapping
     public void updateUserService(
             Authentication authentication,
             @RequestParam(name = "type") String type,
@@ -84,7 +96,7 @@ public class UserServiceCareController {
         userService.updateUser(user);
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public void deleteUserService(
             Authentication authentication
     ) {
