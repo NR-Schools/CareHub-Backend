@@ -5,6 +5,7 @@ import com.it120p.carehub.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,5 +29,9 @@ public class UserService {
     public User getUserByEmail(String email) {
         Optional<User> optionalUser = userRepository.findUserByEmail(email);
         return optionalUser.orElse(null);
+    }
+
+    public List<User> getUsersByName(String nameKeyword) {
+        return userRepository.findUsersByName(nameKeyword);
     }
 }

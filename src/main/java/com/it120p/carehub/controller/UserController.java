@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -24,16 +25,30 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public UserInfoDTO getUserInformation(
+    public UserInfoDTO getSelfUserInformation(
             Authentication authentication
-    ) throws Exception {
+    ) {
+        User selfUser = ((User) authentication.getPrincipal());
+        return UserInfoDTO.fromUser(selfUser);
+    }
 
-        String email = ((UserDetails) authentication.getPrincipal()).getUsername();
-        User user = userService.getUserByEmail(email);
+    @GetMapping("/email")
+    public UserInfoDTO getOtherUserByEmail(
+            @RequestParam("email") String email
+    ) {
+        // Find user by email
+        User otherUser = userService.getUserByEmail(email);
+        return UserInfoDTO.fromUser(otherUser);
+    }
 
-        if (user == null) throw new MissingException("User");
-
-        return UserInfoDTO.fromUser(user);
+    @GetMapping("/name")
+    public List<UserInfoDTO> getOtherUserByName(
+            @RequestParam("name") String name
+    ) {
+        return userService.getUsersByName(name)
+                .stream()
+                .map(UserInfoDTO::fromUser)
+                .toList();
     }
 
     @PutMapping
