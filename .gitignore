@@ -37,4 +37,4 @@ out/
 .vscode/
 
 ### Environment Variables ###
-*/application.properties
+/src/main/resources/application.properties
