@@ -13,7 +13,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.email = ?1")
     Optional<User> findUserByEmail(String email);
 
-    @Query("Select u from USER u WHERE u.name LIKE ?1")
+    @Query("Select u from User u WHERE u.name LIKE %?1%")
     List<User> findUsersByName (String name);
-
 }
