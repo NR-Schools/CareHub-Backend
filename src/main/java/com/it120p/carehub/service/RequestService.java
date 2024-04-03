@@ -22,26 +22,8 @@ public class RequestService {
         return requestRepository.save(request);
     }
 
-    public List<Request> getAllRequests() {
-        return Streamable.of(requestRepository.findAll()).toList();
-    }
-
-    public List<Request> getRequestsByUser(User customer) {
+    public List<Request> getOwnedRequests(User customer) {
         return requestRepository.findRequestsByUser(customer);
-    }
-
-    public Request getOwnedRequest(User customer, long requestId) throws Exception {
-        // Get Request
-        Optional<Request> optionalRequest = requestRepository.findRequestById(requestId);
-        if (optionalRequest.isEmpty()) throw new MissingException("Request");
-
-        Request request = optionalRequest.get();
-
-        // Check if owner
-        if (request.getCustomer().getUserId() != customer.getUserId()) throw new PermissionException("Request");
-
-        // Return request
-        return request;
     }
 
     public Request removeOwnedRequest(User customer, long requestId) throws Exception {
