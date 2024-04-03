@@ -18,7 +18,7 @@ public class UserServiceCareController {
     private UserService userService;
 
     @PostMapping
-    public void setUserService(
+    public UserServiceCare setUserService(
             Authentication authentication,
             @RequestParam(name = "type") String type,
             @RequestParam(name = "description") String description,
@@ -43,6 +43,7 @@ public class UserServiceCareController {
         user.setUserServiceCare(userServiceCare);
 
         userService.updateUser(user);
+        return userServiceCare;
     }
 
     @GetMapping
@@ -56,20 +57,8 @@ public class UserServiceCareController {
         return user.getUserServiceCare();
     }
 
-    @GetMapping("/other")
-    public UserServiceCare getOtherUserService(
-            @RequestParam(name = "email") String email
-    ) throws Exception {
-        // Get other user
-        User otherUser = userService.getUserByEmail(email);
-
-        if (otherUser == null) throw new MissingException("User");
-
-        return otherUser.getUserServiceCare();
-    }
-
     @PutMapping
-    public void updateUserService(
+    public UserServiceCare updateUserService(
             Authentication authentication,
             @RequestParam(name = "type") String type,
             @RequestParam(name = "description") String description,
@@ -94,10 +83,11 @@ public class UserServiceCareController {
         user.setUserServiceCare(userServiceCare);
 
         userService.updateUser(user);
+        return userServiceCare;
     }
 
     @DeleteMapping
-    public void deleteUserService(
+    public UserServiceCare deleteUserService(
             Authentication authentication
     ) {
         // Get User from Authentication
@@ -106,5 +96,6 @@ public class UserServiceCareController {
         // Remove UserServiceCare
         user.setUserServiceCare(null);
         userService.updateUser(user);
+        return user.getUserServiceCare();
     }
 }
