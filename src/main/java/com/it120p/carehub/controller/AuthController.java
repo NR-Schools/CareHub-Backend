@@ -49,7 +49,7 @@ public class AuthController {
         newUser.setName(name);
         newUser.setContactNo(contactNo);
         newUser.setBirthDate(birthDate);
-        newUser.setPhotoBytes(profilePic.getBytes());
+        if (profilePic != null) newUser.setPhotoBytes(profilePic.getBytes());
         User updateUser = userService.updateUser(newUser);
 
         // Return DTO
