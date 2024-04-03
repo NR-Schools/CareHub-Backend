@@ -13,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -31,8 +32,9 @@ public class AuthController {
             @RequestParam(name = "name") String name,
             @RequestParam(name = "email") String email,
             @RequestParam(name = "password") String password,
-            @RequestParam(name = "contactNo", required = false) String contactNo,
-            @RequestParam(name = "birthDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthDate
+            @RequestParam(name = "contactNo") String contactNo,
+            @RequestParam(name = "birthDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthDate,
+            @RequestPart(name = "profilePic", required = false) MultipartFile profilePic
     ) throws Exception {
 
         // Check if email is unique
@@ -47,6 +49,7 @@ public class AuthController {
         newUser.setName(name);
         newUser.setContactNo(contactNo);
         newUser.setBirthDate(birthDate);
+        newUser.setPhotoBytes(profilePic.getBytes());
         User updateUser = userService.updateUser(newUser);
 
         // Return DTO
