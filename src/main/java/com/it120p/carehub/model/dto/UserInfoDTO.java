@@ -1,6 +1,7 @@
 package com.it120p.carehub.model.dto;
 
 import com.it120p.carehub.model.entity.User;
+import com.it120p.carehub.model.entity.UserServiceCare;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,6 +15,7 @@ public class UserInfoDTO {
     private String contactNo;
     private LocalDate birthDate;
     private byte[] photoBytes;
+    private UserServiceCare userServiceCare;
 
     public static UserInfoDTO fromUser(User user) {
         return UserInfoDTO.builder()
@@ -22,6 +24,7 @@ public class UserInfoDTO {
                 .contactNo(user.getContactNo())
                 .birthDate(user.getBirthDate())
                 .photoBytes(user.getPhotoBytes())
+                .userServiceCare(user.getUserServiceCare())
                 .build();
     }
 }
