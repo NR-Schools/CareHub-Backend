@@ -6,14 +6,11 @@ import com.it120p.carehub.model.entity.User;
 import com.it120p.carehub.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -35,9 +32,13 @@ public class UserController {
     @GetMapping("/email")
     public UserInfoDTO getOtherUserByEmail(
             @RequestParam("email") String email
-    ) {
+    ) throws Exception {
+
         // Find user by email
         User otherUser = userService.getUserByEmail(email);
+
+        if (otherUser == null) throw new MissingException("User");
+
         return UserInfoDTO.fromUser(otherUser);
     }
 
