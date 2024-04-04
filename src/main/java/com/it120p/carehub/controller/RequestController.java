@@ -1,6 +1,7 @@
 package com.it120p.carehub.controller;
 
 import com.it120p.carehub.exceptions.StatusException;
+import com.it120p.carehub.model.dto.RequestDTO;
 import com.it120p.carehub.model.entity.Request;
 import com.it120p.carehub.model.entity.OfferStatus;
 import com.it120p.carehub.model.entity.RequestStatus;
@@ -20,8 +21,8 @@ public class RequestController {
     @Autowired
     private RequestService requestService;
 
-    @PostMapping("")
-    public Request createCustomerRequest(
+    @PostMapping
+    public RequestDTO createCustomerRequest(
             Authentication authentication,
             @RequestParam("requestDetails") String requestDetails
     ) {
@@ -36,49 +37,25 @@ public class RequestController {
                 .build();
 
         // Save Request
-        return requestService.saveRequest(newRequest);
+        return RequestDTO.fromRequest(requestService.saveRequest(newRequest));
     }
 
-    @GetMapping("/all")
-    public List<Request> getAllCustomerRequests() {
-        return requestService.getAllRequests();
-    }
-
-    @GetMapping("/user")
-    public List<Request> getCustomerRequestsById(
+    @GetMapping
+    public List<RequestDTO> getSelfCustomerRequests(
             Authentication authentication
     ) {
         // Get User from Authentication
         User user = (User) authentication.getPrincipal();
 
         // Get Request by Id
-        return requestService.getRequestsByUser(user);
+        return requestService.getOwnedRequests(user)
+                .stream()
+                .map(RequestDTO::fromRequest)
+                .toList();
     }
 
-    @PutMapping("")
-    public Request updateCustomerRequest(
-            Authentication authentication,
-            @RequestParam("requestId") long requestId,
-            @RequestParam("requestDetails") String requestDetails
-    ) throws Exception {
-        // Get User from Authentication
-        User user = (User) authentication.getPrincipal();
-
-        // Fetch existing Request
-        Request existingRequest = requestService.getOwnedRequest(
-                user,
-                requestId
-        );
-
-        // Update existing Request
-        existingRequest.setRequestDetails(requestDetails);
-
-        // Save Request
-        return requestService.saveRequest(existingRequest);
-    }
-
-    @DeleteMapping("")
-    public Request deleteCustomerRequest(
+    @DeleteMapping
+    public RequestDTO deleteCustomerRequest(
             Authentication authentication,
             @RequestParam("requestId") long requestId
     ) throws Exception {
@@ -86,9 +63,11 @@ public class RequestController {
         User user = (User) authentication.getPrincipal();
 
         // Remove Request
-        return requestService.removeOwnedRequest(
-                user,
-                requestId
+        return RequestDTO.fromRequest(
+                requestService.removeOwnedRequest(
+                        user,
+                        requestId
+                )
         );
     }
 }
