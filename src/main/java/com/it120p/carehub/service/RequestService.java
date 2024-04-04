@@ -26,6 +26,10 @@ public class RequestService {
         return requestRepository.findRequestsByUser(customer);
     }
 
+    public Request getRequestById(long requestId) {
+        return requestRepository.findRequestById(requestId).orElseThrow();
+    }
+
     public Request removeOwnedRequest(User customer, long requestId) throws Exception {
         // Get Request
         Optional<Request> optionalRequest = requestRepository.findRequestById(requestId);
