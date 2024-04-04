@@ -29,27 +29,28 @@ public class UserController {
         return UserInfoDTO.fromUser(selfUser);
     }
 
-    @GetMapping("/email")
-    public UserInfoDTO getOtherUserByEmail(
-            @RequestParam("email") String email
+    @GetMapping("/query")
+    public List<UserInfoDTO> getOtherUserByEmail(
+            @RequestParam("type") String type,
+            @RequestParam("query") String query
     ) throws Exception {
 
-        // Find user by email
-        User otherUser = userService.getUserByEmail(email);
+        List<UserInfoDTO> results = new java.util.ArrayList<>(List.of());
 
-        if (otherUser == null) throw new MissingException("User");
+        if (type.equals("email")) {
+            User otherUser = userService.getUserByEmail(query);
+            if (otherUser == null) throw new MissingException("User");
+            results.add(
+                    UserInfoDTO.fromUser(otherUser)
+            );
+        } else if (type.equals("name")) {
+            results = userService.getUsersByName(query)
+                    .stream()
+                    .map(UserInfoDTO::fromUser)
+                    .toList();
+        }
 
-        return UserInfoDTO.fromUser(otherUser);
-    }
-
-    @GetMapping("/name")
-    public List<UserInfoDTO> getOtherUserByName(
-            @RequestParam("name") String name
-    ) {
-        return userService.getUsersByName(name)
-                .stream()
-                .map(UserInfoDTO::fromUser)
-                .toList();
+        return results;
     }
 
     @PutMapping
