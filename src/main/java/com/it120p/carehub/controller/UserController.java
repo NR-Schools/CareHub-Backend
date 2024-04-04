@@ -3,6 +3,7 @@ package com.it120p.carehub.controller;
 import com.it120p.carehub.exceptions.MissingException;
 import com.it120p.carehub.model.dto.UserInfoDTO;
 import com.it120p.carehub.model.entity.User;
+import com.it120p.carehub.model.entity.UserServiceCare;
 import com.it120p.carehub.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/user")
@@ -72,6 +74,44 @@ public class UserController {
         if (birthDate != null) user.setBirthDate(birthDate);
         if (contactNo != null) user.setContactNo(contactNo);
         if (profilePic != null) user.setPhotoBytes(profilePic.getBytes());
+
+        User updatedUser = userService.updateUser(user);
+        return UserInfoDTO.fromUser(updatedUser);
+    }
+
+
+    @PostMapping("/service")
+    public UserInfoDTO setUserService(
+            Authentication authentication,
+            @RequestParam(name = "type") String type,
+            @RequestParam(name = "description") String description,
+            @RequestParam(name = "offerings") List<String> offerings
+    ) {
+
+        // Get User from Authentication
+        User user = (User) authentication.getPrincipal();
+
+        // Set Service
+        UserServiceCare userServiceCare = UserServiceCare.builder()
+                .type(type)
+                .description(description)
+                .offerings(offerings)
+                .build();
+        user.setUserServiceCare(userServiceCare);
+
+        User updatedUser = userService.updateUser(user);
+        return UserInfoDTO.fromUser(updatedUser);
+    }
+
+    @DeleteMapping("service")
+    public UserInfoDTO deleteUserService(
+            Authentication authentication
+    ) {
+        // Get User from Authentication
+        User user = (User) authentication.getPrincipal();
+
+        // Remove UserServiceCare
+        user.setUserServiceCare(null);
 
         User updatedUser = userService.updateUser(user);
         return UserInfoDTO.fromUser(updatedUser);
