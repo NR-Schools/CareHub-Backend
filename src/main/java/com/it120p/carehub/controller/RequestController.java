@@ -25,9 +25,18 @@ public class RequestController {
     public RequestDTO createCustomerRequest(
             Authentication authentication,
             @RequestParam("requestDetails") String requestDetails
-    ) {
+    ) throws Exception {
         // Get User from Authentication
         User user = (User) authentication.getPrincipal();
+
+        // Check if user is a customer (No User Service set)
+        if (user.getUserServiceCare() != null) {
+            throw new StatusException(
+                    "User",
+                    "Customer",
+                    "Service Provider"
+            );
+        }
 
         // Create new Request
         Request newRequest = Request.builder()
@@ -59,6 +68,7 @@ public class RequestController {
             Authentication authentication,
             @RequestParam("requestId") long requestId
     ) throws Exception {
+
         // Get User from Authentication
         User user = (User) authentication.getPrincipal();
 
