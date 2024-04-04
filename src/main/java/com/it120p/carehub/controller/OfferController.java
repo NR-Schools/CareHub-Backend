@@ -130,7 +130,7 @@ public class OfferController {
 
 
 
-    @PutMapping
+    @PutMapping("/accept")
     public OfferDTO customerAcceptServiceProviderOffer(
             Authentication authentication,
             @RequestParam("offerId") long offerId
@@ -158,7 +158,7 @@ public class OfferController {
         );
     }
 
-    @PutMapping
+    @PutMapping("/revert")
     public OfferDTO revertBackStatus(
             Authentication authentication,
             @RequestParam("offerId") long offerId
