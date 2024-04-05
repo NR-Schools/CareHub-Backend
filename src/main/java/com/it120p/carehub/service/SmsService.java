@@ -7,7 +7,10 @@ import com.it120p.carehub.model.dto.OtpStatus;
 import com.it120p.carehub.model.dto.OtpValidationRequest;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -15,6 +18,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+@Service
+@Slf4j
 public class SmsService {
 
     @Autowired

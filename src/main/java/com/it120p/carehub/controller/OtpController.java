@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping
 @Slf4j
 
-public class OTPController {
+public class OtpController {
 
     @Autowired
     private SmsService smsService;
