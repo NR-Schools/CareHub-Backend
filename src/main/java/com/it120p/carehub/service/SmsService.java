@@ -1,10 +1,7 @@
 package com.it120p.carehub.service;
 
 import com.it120p.carehub.config.TwilioConfig;
-import com.it120p.carehub.model.dto.OtpRequest;
-import com.it120p.carehub.model.dto.OtpResponseDto;
-import com.it120p.carehub.model.dto.OtpStatus;
-import com.it120p.carehub.model.dto.OtpValidationRequest;
+import com.it120p.carehub.model.dto.*;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 import lombok.extern.slf4j.Slf4j;
@@ -30,15 +27,15 @@ public class SmsService {
     public OtpResponseDto sendSMS(OtpRequest otpRequest) {
         OtpResponseDto otpResponseDto = null;
         try {
-            PhoneNumber to = new PhoneNumber(otpRequest.getPhoneNumber());//to
+            PhoneNumber to = new PhoneNumber(otpRequest.getContactNo());//to
             PhoneNumber from = new PhoneNumber(twilioConfig.getPhoneNumber()); // from
             String otp = generateOTP();
-            String otpMessage = "Dear Customer , Your OTP is  " + otp + " for sending sms through Spring boot application. Thank You.";
+            String otpMessage = "Master Baiter OTP: "+ otp;
             Message message = Message
                     .creator(to, from,
                             otpMessage)
                     .create();
-            otpMap.put(otpRequest.getUsername(), otp);
+            otpMap.put(otpRequest.getEmail(), otp);
             otpResponseDto = new OtpResponseDto(OtpStatus.DELIVERED, otpMessage);
         } catch (Exception e) {
             e.printStackTrace();
@@ -49,11 +46,11 @@ public class SmsService {
 
     public String validateOtp(OtpValidationRequest otpValidationRequest) {
         Set<String> keys = otpMap.keySet();
-        String username = null;
+        String email = null;
         for(String key : keys)
-            username = key;
-        if (otpValidationRequest.getUsername().equals(username)) {
-            otpMap.remove(username,otpValidationRequest.getOtpNumber());
+            email = key;
+        if (otpValidationRequest.getEmail().equals(email)) {
+            otpMap.remove(email,otpValidationRequest.getOtpNumber());
             return "OTP is valid!";
         } else {
             return "OTP is invalid!";
