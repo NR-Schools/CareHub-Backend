@@ -1,0 +1,37 @@
+name: Change Request
+description: File a change/refactor request
+title: "[Change Request] <title>"
+labels: [refactor]
+body:
+- type: checkboxes
+  attributes:
+    label: Is there an existing issue for this?
+    description: Please search to see if an issue already exists for the issue you encountered.
+    options:
+    - label: This is not a duplicate
+      required: true
+- type: textarea
+  attributes:
+    label: Change/Refactor Request Description
+    description: A concise description of what you want to change or refactor.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: What are the affected components/files?
+    description: A concise description of the components or files whose this request will update.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: What is the purpose?
+    description: A concise description on the purpose/goal of why this is needed to be done.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Additional References
+    description: |
+      Attach internal/external references as well as any related stuffs regarding this change request
+  validations:
+    required: false
