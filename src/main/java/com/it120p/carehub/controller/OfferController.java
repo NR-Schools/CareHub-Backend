@@ -32,6 +32,15 @@ public class OfferController {
         // Get User from Authentication
         User user = (User) authentication.getPrincipal();
 
+        // Check if user is a service provider (Has User Service set)
+        if (user.getUserServiceCare() == null) {
+            throw new StatusException(
+                    "User",
+                    "Service Provider",
+                    "Customer"
+            );
+        }
+
         // Check Request Status if still Opened
         Request request = requestService.getRequestById(requestId);
         if (request.getRequestStatus() != RequestStatus.OPEN)

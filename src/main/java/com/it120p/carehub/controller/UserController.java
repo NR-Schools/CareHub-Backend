@@ -3,6 +3,8 @@ package com.it120p.carehub.controller;
 import com.it120p.carehub.exceptions.MissingException;
 import com.it120p.carehub.model.dto.UserInfoDTO;
 import com.it120p.carehub.model.entity.User;
+import com.it120p.carehub.model.entity.UserServiceCare;
+import com.it120p.carehub.service.ResourceService;
 import com.it120p.carehub.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/user")
@@ -20,6 +23,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ResourceService resourceService;
+
 
     @GetMapping
     public UserInfoDTO getSelfUserInformation(
@@ -29,27 +36,28 @@ public class UserController {
         return UserInfoDTO.fromUser(selfUser);
     }
 
-    @GetMapping("/email")
-    public UserInfoDTO getOtherUserByEmail(
-            @RequestParam("email") String email
+    @GetMapping("/query")
+    public List<UserInfoDTO> getOtherUserByEmail(
+            @RequestParam("type") String type,
+            @RequestParam("query") String query
     ) throws Exception {
 
-        // Find user by email
-        User otherUser = userService.getUserByEmail(email);
+        List<UserInfoDTO> results = new java.util.ArrayList<>(List.of());
 
-        if (otherUser == null) throw new MissingException("User");
+        if (type.equals("email")) {
+            User otherUser = userService.getUserByEmail(query);
+            if (otherUser == null) throw new MissingException("User");
+            results.add(
+                    UserInfoDTO.fromUser(otherUser)
+            );
+        } else if (type.equals("name")) {
+            results = userService.getUsersByName(query)
+                    .stream()
+                    .map(UserInfoDTO::fromUser)
+                    .toList();
+        }
 
-        return UserInfoDTO.fromUser(otherUser);
-    }
-
-    @GetMapping("/name")
-    public List<UserInfoDTO> getOtherUserByName(
-            @RequestParam("name") String name
-    ) {
-        return userService.getUsersByName(name)
-                .stream()
-                .map(UserInfoDTO::fromUser)
-                .toList();
+        return results;
     }
 
     @PutMapping
@@ -70,7 +78,45 @@ public class UserController {
         if (name != null) user.setName(name);
         if (birthDate != null) user.setBirthDate(birthDate);
         if (contactNo != null) user.setContactNo(contactNo);
-        if (profilePic != null) user.setPhotoBytes(profilePic.getBytes());
+        if (profilePic != null) user.setPhotoResource( resourceService.setUserResource(profilePic) );
+
+        User updatedUser = userService.updateUser(user);
+        return UserInfoDTO.fromUser(updatedUser);
+    }
+
+
+    @PostMapping("/service")
+    public UserInfoDTO setUserService(
+            Authentication authentication,
+            @RequestParam("type") String type,
+            @RequestParam("description") String description,
+            @RequestParam("offerings") List<String> offerings
+    ) {
+
+        // Get User from Authentication
+        User user = (User) authentication.getPrincipal();
+
+        // Set Service
+        UserServiceCare userServiceCare = UserServiceCare.builder()
+                .type(type)
+                .description(description)
+                .offerings(offerings)
+                .build();
+        user.setUserServiceCare(userServiceCare);
+
+        User updatedUser = userService.updateUser(user);
+        return UserInfoDTO.fromUser(updatedUser);
+    }
+
+    @DeleteMapping("service")
+    public UserInfoDTO deleteUserService(
+            Authentication authentication
+    ) {
+        // Get User from Authentication
+        User user = (User) authentication.getPrincipal();
+
+        // Remove UserServiceCare
+        user.setUserServiceCare(null);
 
         User updatedUser = userService.updateUser(user);
         return UserInfoDTO.fromUser(updatedUser);

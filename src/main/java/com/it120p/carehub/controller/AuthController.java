@@ -6,6 +6,7 @@ import com.it120p.carehub.model.dto.UserLoginDTO;
 import com.it120p.carehub.model.dto.UserInfoDTO;
 import com.it120p.carehub.model.entity.User;
 import com.it120p.carehub.service.AuthService;
+import com.it120p.carehub.service.ResourceService;
 import com.it120p.carehub.service.UserService;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,10 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ResourceService resourceService;
+
 
     @PostMapping("/register")
     public UserInfoDTO registerAccount(
@@ -49,7 +54,7 @@ public class AuthController {
         newUser.setName(name);
         newUser.setContactNo(contactNo);
         newUser.setBirthDate(birthDate);
-        if (profilePic != null) newUser.setPhotoBytes(profilePic.getBytes());
+        if (profilePic != null) newUser.setPhotoResource( resourceService.setUserResource(profilePic) );
         User updateUser = userService.updateUser(newUser);
 
         // Return DTO

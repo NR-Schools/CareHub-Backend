@@ -1,0 +1,18 @@
+name: Custom Issue
+description: File an issue not categorized by any of the presented options
+title: "<title>"
+labels: []
+body:
+- type: checkboxes
+  attributes:
+    label: Is there an existing issue for this?
+    description: Please search to see if an issue already exists for the issue you encountered.
+    options:
+    - label: This is not a duplicate
+      required: true
+- type: textarea
+  attributes:
+    label: Custom Issue Description
+    description: A concise description of this custom issue.
+  validations:
+    required: true

@@ -1,0 +1,42 @@
+name: Bug
+description: Report a bug
+title: "[BUG] <title>"
+labels: [bug]
+body:
+- type: checkboxes
+  attributes:
+    label: Is there an existing issue for this?
+    description: Please search to see if an issue already exists for the bug you encountered.
+    options:
+    - label: This is not a duplicate
+      required: true
+- type: textarea
+  attributes:
+    label: Current Behavior
+    description: A concise description of what you're experiencing.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Expected Behavior
+    description: A concise description of what you expected to happen.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Steps To Reproduce
+    description: Steps to reproduce the behavior.
+    placeholder: |
+      1. <Specify Environment and Configuration>
+      2. <Specify running and how did it run>
+      3. <Specify action taken while running>
+      4. <Specify error>
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Additional References
+    description: |
+      Attach internal/external references as well as any related stuffs regarding this bug
+  validations:
+    required: false
