@@ -14,7 +14,7 @@ public class UserInfoDTO {
     private String name;
     private String contactNo;
     private LocalDate birthDate;
-    private byte[] photoBytes;
+    private String photoId;
     private UserServiceCare userServiceCare;
 
     public static UserInfoDTO fromUser(User user) {
@@ -23,7 +23,9 @@ public class UserInfoDTO {
                 .name(user.getName())
                 .contactNo(user.getContactNo())
                 .birthDate(user.getBirthDate())
-                .photoBytes(user.getPhotoBytes())
+                .photoId(
+                        user.getPhotoResource() != null ? user.getPhotoResource().getResourceId() : ""
+                )
                 .userServiceCare(user.getUserServiceCare())
                 .build();
     }

@@ -34,9 +34,9 @@ public class User implements UserDetails {
     private String contactNo;
     private LocalDate birthDate;
 
-    // Temporarily store photo in database
-    @Column(columnDefinition = "LONGBLOB")
-    private byte[] photoBytes;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(nullable = true)
+    private Resource photoResource;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private UserServiceCare userServiceCare;

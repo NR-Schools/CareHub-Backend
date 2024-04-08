@@ -4,6 +4,7 @@ import com.it120p.carehub.exceptions.MissingException;
 import com.it120p.carehub.model.dto.UserInfoDTO;
 import com.it120p.carehub.model.entity.User;
 import com.it120p.carehub.model.entity.UserServiceCare;
+import com.it120p.carehub.service.ResourceService;
 import com.it120p.carehub.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,6 +23,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ResourceService resourceService;
+
 
     @GetMapping
     public UserInfoDTO getSelfUserInformation(
@@ -73,7 +78,7 @@ public class UserController {
         if (name != null) user.setName(name);
         if (birthDate != null) user.setBirthDate(birthDate);
         if (contactNo != null) user.setContactNo(contactNo);
-        if (profilePic != null) user.setPhotoBytes(profilePic.getBytes());
+        if (profilePic != null) user.setPhotoResource( resourceService.setUserResource(profilePic) );
 
         User updatedUser = userService.updateUser(user);
         return UserInfoDTO.fromUser(updatedUser);
@@ -83,9 +88,9 @@ public class UserController {
     @PostMapping("/service")
     public UserInfoDTO setUserService(
             Authentication authentication,
-            @RequestParam(name = "type") String type,
-            @RequestParam(name = "description") String description,
-            @RequestParam(name = "offerings") List<String> offerings
+            @RequestParam("type") String type,
+            @RequestParam("description") String description,
+            @RequestParam("offerings") List<String> offerings
     ) {
 
         // Get User from Authentication
