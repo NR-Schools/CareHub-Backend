@@ -24,18 +24,18 @@ public class SmsService {
     Map<String, String> otpMap = new HashMap<>();
 
 
-    public OtpResponseDto sendSMS(OtpRequest otpRequest) {
+    public OtpResponseDto sendSMS(String email, String contactNo) {
         OtpResponseDto otpResponseDto = null;
         try {
-            PhoneNumber to = new PhoneNumber(otpRequest.getContactNo());//to
+            PhoneNumber to = new PhoneNumber(contactNo);//to
             PhoneNumber from = new PhoneNumber(twilioConfig.getPhoneNumber()); // from
             String otp = generateOTP();
-            String otpMessage = "Master Baiter OTP: "+ otp;
+            String otpMessage = "This is your One Time Password (OTP) for your login: "+ otp;
             Message message = Message
                     .creator(to, from,
                             otpMessage)
                     .create();
-            otpMap.put(otpRequest.getEmail(), otp);
+            otpMap.put(email, otp);
             otpResponseDto = new OtpResponseDto(OtpStatus.DELIVERED, otpMessage);
         } catch (Exception e) {
             e.printStackTrace();
