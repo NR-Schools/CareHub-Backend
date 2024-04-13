@@ -43,7 +43,11 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token) {
-        return extractClaim(token, Claims::getExpiration).after(new Date());
+        try {
+            return extractClaim(token, Claims::getExpiration).after(new Date());
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     public boolean isTokenAllowedByUser(String email, String token) {
@@ -61,8 +65,9 @@ public class JwtService {
         });
 
         // Update Allowed Tokens
-        optionalUser.get().setUserAuthTokens(updatedAllowedTokens);
-        userRepository.save(optionalUser.get());
+        User user = optionalUser.get();
+        user.setUserAuthTokens(updatedAllowedTokens);
+        userRepository.save(user);
 
         // Find Token
         return updatedAllowedTokens.stream().anyMatch(
