@@ -147,6 +147,11 @@ public class AuthController {
         // Login user+email
         String jwtToken = authService.loginUser(email, password);
 
+        // Check if customer or provider
+        String userType = "Provider";
+        UserServiceCare userServiceCare = userService.getUserByEmail(email).getUserServiceCare();
+        if (userServiceCare == null) userType = "Customer";
+
         // Check if login successful
         if (jwtToken.isEmpty()) {
             throw new AuthenticationException("User unable to authenticate");
@@ -154,6 +159,7 @@ public class AuthController {
 
         // Return UserLoginResponseDTO
         return UserLoginDTO.builder()
+                .userType(userType)
                 .email(email)
                 .token(jwtToken)
                 .build();
