@@ -5,6 +5,7 @@ import com.it120p.carehub.exceptions.MissingException;
 import com.it120p.carehub.model.dto.UserLoginDTO;
 import com.it120p.carehub.model.dto.UserInfoDTO;
 import com.it120p.carehub.model.entity.User;
+import com.it120p.carehub.model.entity.UserServiceCare;
 import com.it120p.carehub.service.AuthService;
 import com.it120p.carehub.service.ResourceService;
 import com.it120p.carehub.service.UserService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -61,6 +63,76 @@ public class AuthController {
         return UserInfoDTO.fromUser(updateUser);
     }
 
+    @PostMapping("/register/customer")
+    public UserInfoDTO registerCustomer(
+            @RequestParam(name = "name") String name,
+            @RequestParam(name = "email") String email,
+            @RequestParam(name = "password") String password,
+            @RequestParam(name = "contactNo") String contactNo,
+            @RequestParam(name = "birthDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthDate,
+            @RequestPart(name = "profilePic", required = false) MultipartFile profilePic
+    ) throws Exception {
+
+        // Check if email is unique
+        if (userService.isUserExistByEmail(email)) {
+            throw new AlreadyExistException("Email");
+        }
+
+        // Initial Registration of email
+        User newUser = authService.registerUser(email, password);
+
+        // Update User
+        newUser.setName(name);
+        newUser.setContactNo(contactNo);
+        newUser.setBirthDate(birthDate);
+        if (profilePic != null) newUser.setPhotoResource( resourceService.setUserResource(profilePic) );
+        User updateUser = userService.updateUser(newUser);
+
+        // Return DTO
+        return UserInfoDTO.fromUser(updateUser);
+    }
+
+    @PostMapping("/register/provider")
+    public UserInfoDTO registerServiceProvider(
+            @RequestParam(name = "name") String name,
+            @RequestParam(name = "email") String email,
+            @RequestParam(name = "password") String password,
+            @RequestParam(name = "contactNo") String contactNo,
+            @RequestParam(name = "birthDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthDate,
+            @RequestPart(name = "profilePic", required = false) MultipartFile profilePic,
+            @RequestParam("type") String type,
+            @RequestParam("description") String description,
+            @RequestParam("offerings") List<String> offerings
+    ) throws Exception {
+
+        // Check if email is unique
+        if (userService.isUserExistByEmail(email)) {
+            throw new AlreadyExistException("Email");
+        }
+
+        // Initial Registration of email
+        User newUser = authService.registerUser(email, password);
+
+        // Update User
+        newUser.setName(name);
+        newUser.setContactNo(contactNo);
+        newUser.setBirthDate(birthDate);
+        if (profilePic != null) newUser.setPhotoResource( resourceService.setUserResource(profilePic) );
+
+        // Set Service
+        UserServiceCare userServiceCare = UserServiceCare.builder()
+                .type(type)
+                .description(description)
+                .offerings(offerings)
+                .build();
+        newUser.setUserServiceCare(userServiceCare);
+
+        User updateUser = userService.updateUser(newUser);
+
+        // Return DTO
+        return UserInfoDTO.fromUser(updateUser);
+    }
+
     @PostMapping("/login")
     public UserLoginDTO loginAccount(
             @RequestParam(name = "email") String email,
@@ -75,6 +147,11 @@ public class AuthController {
         // Login user+email
         String jwtToken = authService.loginUser(email, password);
 
+        // Check if customer or provider
+        String userType = "Provider";
+        UserServiceCare userServiceCare = userService.getUserByEmail(email).getUserServiceCare();
+        if (userServiceCare == null) userType = "Customer";
+
         // Check if login successful
         if (jwtToken.isEmpty()) {
             throw new AuthenticationException("User unable to authenticate");
@@ -82,6 +159,7 @@ public class AuthController {
 
         // Return UserLoginResponseDTO
         return UserLoginDTO.builder()
+                .userType(userType)
                 .email(email)
                 .token(jwtToken)
                 .build();
