@@ -1,8 +1,10 @@
 package com.it120p.carehub.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,18 +13,22 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    private boolean sendCustomMail(String sendToEmail, String subject, String body) {
+    @Value("${spring.mail.username}")
+    private String senderEmail;
+
+    @Async
+    private void sendCustomMail(String receipientEmail, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(sendToEmail);
+        message.setFrom(senderEmail);
+        message.setTo(receipientEmail);
         message.setSubject(subject);
         message.setText(body);
 
-        try { mailSender.send(message); }
-        catch (Exception ex) { return false; }
-        return true;
+        mailSender.send(message);
     }
 
-    public boolean sendVerificationMail(String targetEmail, String verificationString) {
+    @Async
+    public void sendVerificationMail(String targetEmail, String verificationString) {
 
         String verificationMessage = String.format(
                 """
@@ -32,7 +38,7 @@ public class EmailService {
                 verificationString
         );
 
-        return sendCustomMail(
+        sendCustomMail(
                 targetEmail,
                 "Email Verification",
                 verificationMessage
