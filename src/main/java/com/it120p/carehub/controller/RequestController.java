@@ -63,6 +63,16 @@ public class RequestController {
                 .toList();
     }
 
+    @GetMapping("/all")
+    public List<RequestDTO> getAllCustomerRequests(
+                Authentication authentication
+        ) {
+        return requestService.getAllRequests()
+                .stream()
+                .map(RequestDTO::fromRequest)
+                .toList();
+    }
+
     @DeleteMapping
     public RequestDTO deleteCustomerRequest(
             Authentication authentication,

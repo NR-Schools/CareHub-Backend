@@ -30,6 +30,10 @@ public class RequestService {
         return requestRepository.findRequestById(requestId).orElseThrow();
     }
 
+    public List<Request> getAllRequests() {
+        return Streamable.of(requestRepository.findAll()).toList();
+    }
+
     public Request removeOwnedRequest(User customer, long requestId) throws Exception {
         // Get Request
         Optional<Request> optionalRequest = requestRepository.findRequestById(requestId);
