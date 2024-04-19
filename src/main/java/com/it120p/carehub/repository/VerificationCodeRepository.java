@@ -7,11 +7,11 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import com.it120p.carehub.model.entity.User;
-import com.it120p.carehub.model.entity.VerificationCode;
+import com.it120p.carehub.model.entity.Verification;
 
 @Repository
-public interface VerificationCodeRepository extends CrudRepository<VerificationCode, Long> {
+public interface VerificationCodeRepository extends CrudRepository<Verification, Long> {
 
-    @Query("SELECT verify FROM VerificationCode verify WHERE verify.user = ?1")
-    Optional<VerificationCode> findVerificationCodeByUser(User user);
+    @Query("SELECT verify FROM Verification verify WHERE verify.user = ?1")
+    Optional<Verification> findVerificationCodeByUser(User user);
 }

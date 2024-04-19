@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.it120p.carehub.model.entity.User;
-import com.it120p.carehub.model.entity.VerificationCode;
+import com.it120p.carehub.model.entity.Verification;
 import com.it120p.carehub.repository.VerificationCodeRepository;
 
 @Service
@@ -39,7 +39,7 @@ public class VerificationService {
 
         // Add to verification table
         verificationCodeRepository.save(
-                VerificationCode.builder()
+                Verification.builder()
                         .user(user)
                         .code(code)
                         .expiryDate(
@@ -51,7 +51,7 @@ public class VerificationService {
 
     public boolean attemptVerifyCode(User user, String code) {
         // Check user from repository
-        VerificationCode verificationCode = verificationCodeRepository.findVerificationCodeByUser(user).orElseThrow();
+        Verification verificationCode = verificationCodeRepository.findVerificationCodeByUser(user).orElseThrow();
 
         // Check date if not expired
         if (verificationCode.getExpiryDate().isBefore(LocalDateTime.now())) return false;
