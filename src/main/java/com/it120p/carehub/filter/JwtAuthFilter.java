@@ -1,5 +1,6 @@
 package com.it120p.carehub.filter;
 
+import com.it120p.carehub.model.entity.User;
 import com.it120p.carehub.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -46,6 +47,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(jwtUsername);
 
             // Check if userDetails is null
+            if (userDetails == null) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            // Check if user is not yet activated
+            User user = (User) userDetails;
+            if (!user.isUserActivated()) {
+                filterChain.doFilter(request, response);
+                return;
+            }
 
             // Check if token is valid and allowed
             if (jwtService.isTokenAllowedByUser(userDetails.getUsername(), jwtTokenString)) {

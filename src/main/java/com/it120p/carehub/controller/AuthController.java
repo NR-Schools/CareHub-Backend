@@ -161,6 +161,11 @@ public class AuthController {
             // Check if code is correct
             boolean status = verificationService.attemptVerifyCode(user, code);
 
+            if (status) {
+                user.setUserActivated(true);
+                userService.updateUser(user);
+            }
+
             // Return verification
             return VerificationStatusDTO.builder()
                     .email(email)

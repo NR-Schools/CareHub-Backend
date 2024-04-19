@@ -54,6 +54,9 @@ public class User implements UserDetails {
     )
     private List<UserAuthToken> userAuthTokens;
 
+    @Builder.Default
+    private boolean isUserActivated = false;
+
     @CreatedDate
     private LocalDateTime createdDate;
 

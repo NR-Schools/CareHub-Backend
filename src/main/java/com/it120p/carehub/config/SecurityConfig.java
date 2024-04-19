@@ -30,6 +30,7 @@ public class SecurityConfig {
                         req -> req
                                 .requestMatchers("/auth/register/**").permitAll()
                                 .requestMatchers("/auth/login").permitAll()
+                                .requestMatchers("/auth/user/verify").permitAll()
                                 .requestMatchers("/resource/user").permitAll()
                                 .anyRequest().authenticated()
                 )
