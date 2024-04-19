@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @Entity
-@Table(name = "verification_codes")
-public class VerificationCode {
+@Table(name = "verification")
+public class Verification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
