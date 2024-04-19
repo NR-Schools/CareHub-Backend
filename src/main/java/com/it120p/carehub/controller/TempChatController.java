@@ -49,7 +49,7 @@ public class TempChatController {
     @PostMapping
     public void addMessagebyUser(
         Authentication authentication,
-        @RequestParam("otherUserEmail") String otherUserEmail,
+        @RequestPart("otherUserEmail") String otherUserEmail,
         @RequestPart("chatMessage") ChatMessage chatMessage
     ) {
         // Get User from Authentication
