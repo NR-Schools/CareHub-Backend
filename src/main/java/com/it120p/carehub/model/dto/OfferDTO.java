@@ -2,12 +2,6 @@ package com.it120p.carehub.model.dto;
 
 import com.it120p.carehub.model.entity.Offer;
 import com.it120p.carehub.model.entity.OfferStatus;
-import com.it120p.carehub.model.entity.Request;
-import com.it120p.carehub.model.entity.User;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Data;
 

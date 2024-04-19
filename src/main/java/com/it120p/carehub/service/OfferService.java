@@ -1,5 +1,7 @@
 package com.it120p.carehub.service;
 
+import com.it120p.carehub.exceptions.MissingException;
+import com.it120p.carehub.exceptions.PermissionException;
 import com.it120p.carehub.model.entity.Offer;
 import com.it120p.carehub.model.entity.Request;
 import com.it120p.carehub.model.entity.User;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OfferService {
@@ -40,9 +43,30 @@ public class OfferService {
         return offerRepository.findOffersByRequestId(request);
     }
 
-    public Offer removeOffer(long offerId) {
-        Offer offer = offerRepository.findById(offerId).orElseThrow();
+    public Offer updateOwnedOffer(User provider, Offer updatedOffer) throws Exception {
+        // Check if owner
+        if (updatedOffer.getServiceProvider().getUserId() != provider.getUserId()) throw new PermissionException("Offer");
+        
+        // Update offer
+        offerRepository.save(updatedOffer);
+
+        return updatedOffer;
+    }
+
+    public Offer removeOwnedOffer(User provider, long offerId) throws Exception {
+        // Get Request
+        Optional<Offer> optionalOffer = offerRepository.findById(offerId);
+        if (optionalOffer.isEmpty()) throw new MissingException("Offer");
+
+        Offer offer = optionalOffer.get();
+
+        // Check if owner
+        if (offer.getServiceProvider().getUserId() != provider.getUserId()) throw new PermissionException("Offer");
+
+        // Remove offer
         offerRepository.delete(offer);
+
+        // Return offer
         return offer;
     }
 }

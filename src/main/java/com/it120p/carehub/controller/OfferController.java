@@ -110,7 +110,7 @@ public class OfferController {
 
         // Save Offer
         return OfferDTO.fromOffer(
-                offerService.saveOffer(offer)
+                offerService.updateOwnedOffer(user, offer)
         );
     }
 
@@ -133,7 +133,7 @@ public class OfferController {
 
         // Remove Offer
         return OfferDTO.fromOffer(
-                offerService.removeOffer(offerId)
+                offerService.removeOwnedOffer(user, offerId)
         );
     }
 

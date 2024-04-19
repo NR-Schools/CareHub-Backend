@@ -3,12 +3,15 @@ package com.it120p.carehub.controller;
 import com.it120p.carehub.exceptions.AlreadyExistException;
 import com.it120p.carehub.exceptions.MissingException;
 import com.it120p.carehub.model.dto.UserLoginDTO;
+import com.it120p.carehub.model.dto.VerificationStatusDTO;
 import com.it120p.carehub.model.dto.UserInfoDTO;
 import com.it120p.carehub.model.entity.User;
 import com.it120p.carehub.model.entity.UserServiceCare;
 import com.it120p.carehub.service.AuthService;
 import com.it120p.carehub.service.ResourceService;
 import com.it120p.carehub.service.UserService;
+import com.it120p.carehub.service.VerificationService;
+
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,6 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -32,6 +38,9 @@ public class AuthController {
 
     @Autowired
     private ResourceService resourceService;
+
+    @Autowired
+    private VerificationService verificationService;
 
 
     @PostMapping("/register")
@@ -58,6 +67,9 @@ public class AuthController {
         newUser.setBirthDate(birthDate);
         if (profilePic != null) newUser.setPhotoResource( resourceService.setUserResource(profilePic) );
         User updateUser = userService.updateUser(newUser);
+
+        // Send Verification Code
+        verificationService.sendVerificationCode(updateUser);
 
         // Return DTO
         return UserInfoDTO.fromUser(updateUser);
@@ -87,6 +99,9 @@ public class AuthController {
         newUser.setBirthDate(birthDate);
         if (profilePic != null) newUser.setPhotoResource( resourceService.setUserResource(profilePic) );
         User updateUser = userService.updateUser(newUser);
+
+        // Send Verification Code
+        verificationService.sendVerificationCode(updateUser);
 
         // Return DTO
         return UserInfoDTO.fromUser(updateUser);
@@ -126,13 +141,33 @@ public class AuthController {
                 .offerings(offerings)
                 .build();
         newUser.setUserServiceCare(userServiceCare);
-
         User updateUser = userService.updateUser(newUser);
+
+        // Send Verification Code
+        verificationService.sendVerificationCode(updateUser);
 
         // Return DTO
         return UserInfoDTO.fromUser(updateUser);
     }
 
+    @GetMapping("/user/verify")
+    public VerificationStatusDTO verifyUser(
+            @RequestParam("email") String email,
+            @RequestParam("code") String code
+        ) {
+            // Get user from email
+            User user = userService.getUserByEmail(email);
+
+            // Check if code is correct
+            boolean status = verificationService.attemptVerifyCode(user, code);
+
+            // Return verification
+            return VerificationStatusDTO.builder()
+                    .email(email)
+                    .isVerifySuccessful(status)
+                    .build();
+        }
+    
     @PostMapping("/login")
     public UserLoginDTO loginAccount(
             @RequestParam(name = "email") String email,

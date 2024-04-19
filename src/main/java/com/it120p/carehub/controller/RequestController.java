@@ -3,7 +3,6 @@ package com.it120p.carehub.controller;
 import com.it120p.carehub.exceptions.StatusException;
 import com.it120p.carehub.model.dto.RequestDTO;
 import com.it120p.carehub.model.entity.Request;
-import com.it120p.carehub.model.entity.OfferStatus;
 import com.it120p.carehub.model.entity.RequestStatus;
 import com.it120p.carehub.model.entity.User;
 import com.it120p.carehub.service.RequestService;

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -16,6 +17,8 @@ public class UserInfoDTO {
     private LocalDate birthDate;
     private String photoId;
     private UserServiceCare userServiceCare;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModifiedDate;
 
     public static UserInfoDTO fromUser(User user) {
         return UserInfoDTO.builder()
@@ -27,6 +30,8 @@ public class UserInfoDTO {
                         user.getPhotoResource() != null ? user.getPhotoResource().getResourceId() : ""
                 )
                 .userServiceCare(user.getUserServiceCare())
+                .createdDate(user.getCreatedDate())
+                .lastModifiedDate(user.getLastModifiedDate())
                 .build();
     }
 }
