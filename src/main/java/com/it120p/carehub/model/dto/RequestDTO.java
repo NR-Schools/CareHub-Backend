@@ -2,7 +2,6 @@ package com.it120p.carehub.model.dto;
 
 import com.it120p.carehub.model.entity.Request;
 import com.it120p.carehub.model.entity.RequestStatus;
-import com.it120p.carehub.model.entity.User;
 import lombok.Builder;
 import lombok.Data;
 
