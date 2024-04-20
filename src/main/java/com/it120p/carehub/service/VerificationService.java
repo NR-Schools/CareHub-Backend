@@ -54,7 +54,7 @@ public class VerificationService {
         Verification verificationCode = verificationCodeRepository.findVerificationCodeByUser(user).orElseThrow();
 
         // Check date if not expired
-        if (verificationCode.getExpiryDate().isBefore(LocalDateTime.now())) return false;
+        if (verificationCode.getExpiryDate().isAfter(LocalDateTime.now())) return false;
     
         // Check code
         return verificationCode.getCode().equals(code);

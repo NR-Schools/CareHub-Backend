@@ -24,7 +24,7 @@ public class ChatController {
     @MessageMapping("/private-message")
     public Message recMessage(Authentication authentication, @Payload Message message){
         
-        if(authentication == null) System.out.println("NULLLL!!!!");
+        System.out.println(authentication.getPrincipal());
 
         simpMessagingTemplate.convertAndSendToUser(message.getReceiverName(),"/private",message);
         System.out.println(message.toString());
