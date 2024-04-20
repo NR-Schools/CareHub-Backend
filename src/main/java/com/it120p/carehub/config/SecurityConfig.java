@@ -33,7 +33,6 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/login").permitAll()
                                 .requestMatchers("/auth/user/verify").permitAll()
                                 .requestMatchers("/resource/user").permitAll()
-                                .requestMatchers("/ws/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(
