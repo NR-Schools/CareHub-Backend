@@ -1,33 +1,58 @@
 package com.it120p.carehub.controller;
 
 import com.it120p.carehub.model.chat.Message;
+import com.it120p.carehub.model.dto.ChatMessageDTO;
+import com.it120p.carehub.model.entity.ChatMessage;
+import com.it120p.carehub.model.entity.User;
+import com.it120p.carehub.model.entity.UserConversation;
+import com.it120p.carehub.service.UserConversationService;
+import com.it120p.carehub.service.UserService;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 
 @Controller
 public class ChatController {
+
+    @Autowired
+    private UserConversationService userConversationService;
+
+    @Autowired
+    private UserService userService;
+
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @MessageMapping("/message")
-    @SendTo("/chatroom/public")
-    public Message receiveMessage(@Payload Message message){
-        return message;
-    }
-
     @MessageMapping("/private-message")
-    public Message recMessage(Authentication authentication, @Payload Message message){
+    public void receivePrivateMessage(Authentication authentication, @Payload ChatMessageDTO chatMessageDTO){
         
-        System.out.println(authentication.getPrincipal());
+        // Get user (sender)
+        User user = (User) authentication.getPrincipal();
 
-        simpMessagingTemplate.convertAndSendToUser(message.getReceiverName(),"/private",message);
-        System.out.println(message.toString());
-        return message;
+        // Get receiver from chatMessageDTO
+        User receiver = userService.getUserByEmail(chatMessageDTO.getReceiverUser());
+
+        // Build ChatMessage object
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setSender(user);                                // Use user from auth object
+        chatMessage.setReceiver(receiver);                          // Receiver from DTO
+        chatMessage.setPayload(chatMessageDTO.getMessageText());    // Message from DTO
+        chatMessage.setTimestamp(LocalDateTime.now());              // Timestamp auto gen
+
+        // Get Conversation
+        UserConversation userConversation = userConversationService.findConversationWithMembers(List.of(receiver));
+        
+        // Add message to Conversation
+        userConversationService.addMessageToConversation(userConversation.getConversationId(), chatMessage);
+
+        // Send to Conversation Id
+        simpMessagingTemplate.convertAndSendToUser(String.valueOf(userConversation.getConversationId()) ,"/private", chatMessage);
     }
 }
