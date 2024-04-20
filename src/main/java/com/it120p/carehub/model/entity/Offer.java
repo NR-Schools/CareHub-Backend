@@ -18,11 +18,11 @@ public class Offer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long offerId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "service_provider_id")
     private User serviceProvider;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "request_id")
     private Request request;
 

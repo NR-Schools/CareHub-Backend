@@ -18,7 +18,7 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long requestId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id")
     private User customer;
 
