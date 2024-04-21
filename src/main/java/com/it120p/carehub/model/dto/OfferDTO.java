@@ -31,4 +31,17 @@ public class OfferDTO {
                 )
                 .build();
     }
+
+    public static OfferDTO fromOfferWithoutRequest(Offer offer) {
+        return OfferDTO.builder()
+                .offerId(offer.getOfferId())
+                .offerDetails(offer.getOfferDetails())
+                .offerStatus(offer.getOfferStatus())
+                .serviceProvider(
+                        UserInfoDTO.fromUser(
+                                offer.getServiceProvider()
+                        )
+                )
+                .build();
+    }
 }

@@ -68,7 +68,7 @@ public class RequestController {
         ) {
         return requestService.getAllRequests()
                 .stream()
-                .map(RequestDTO::fromRequest)
+                .map(RequestDTO::fromRequestWithOfferList)
                 .toList();
     }
 

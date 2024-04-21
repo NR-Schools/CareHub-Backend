@@ -1,5 +1,7 @@
 package com.it120p.carehub.model.entity;
 
+import java.util.List;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -30,4 +32,7 @@ public class Request {
 
     @Enumerated(EnumType.STRING)
     private RequestStatus requestStatus;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Offer> offers;
 }
