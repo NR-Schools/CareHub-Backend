@@ -13,4 +13,8 @@ public class ChatMessageDTO {
     private String receiverUser;
     private String messageText;
     private LocalDateTime timestamp;
+
+    // Add this for status check if this is a join or a message
+    public enum Status { JOIN, MESSAGE }
+    private Status status;
 }

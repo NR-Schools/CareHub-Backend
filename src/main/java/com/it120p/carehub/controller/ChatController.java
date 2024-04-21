@@ -1,7 +1,7 @@
 package com.it120p.carehub.controller;
 
-import com.it120p.carehub.model.chat.Message;
 import com.it120p.carehub.model.dto.ChatMessageDTO;
+import com.it120p.carehub.model.dto.ChatMessageDTO.Status;
 import com.it120p.carehub.model.entity.ChatMessage;
 import com.it120p.carehub.model.entity.User;
 import com.it120p.carehub.model.entity.UserConversation;
@@ -39,6 +39,8 @@ public class ChatController {
         // Get receiver from chatMessageDTO
         User receiver = userService.getUserByEmail(chatMessageDTO.getReceiverUser());
 
+        if (receiver == null) return;
+
         // Build ChatMessage object
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setSender(user);                                // Use user from auth object
@@ -52,7 +54,17 @@ public class ChatController {
         // Add message to Conversation
         userConversationService.addMessageToConversation(userConversation.getConversationId(), chatMessage);
 
+        // Construct DTO
+        ChatMessageDTO responseChatMessageDTO = ChatMessageDTO.builder()
+                                                    .conversationId(userConversation.getConversationId())
+                                                    .senderUser(user.getEmail())
+                                                    .receiverUser(receiver.getEmail())
+                                                    .messageText(chatMessage.getPayload())
+                                                    .timestamp(chatMessage.getTimestamp())
+                                                    .status(Status.MESSAGE)
+                                                    .build();
+
         // Send to Conversation Id
-        simpMessagingTemplate.convertAndSendToUser(String.valueOf(userConversation.getConversationId()) ,"/private", chatMessage);
+        simpMessagingTemplate.convertAndSendToUser(String.valueOf(userConversation.getConversationId()) ,"/private", responseChatMessageDTO);
     }
 }
