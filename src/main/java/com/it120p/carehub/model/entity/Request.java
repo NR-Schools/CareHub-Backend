@@ -1,5 +1,8 @@
 package com.it120p.carehub.model.entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +21,8 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long requestId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "customer_id")
     private User customer;
 
