@@ -17,6 +17,10 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 
 @Controller
 public class ChatController {
@@ -29,6 +33,23 @@ public class ChatController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
+
+    @RequestMapping(path = "/chat/history", method=RequestMethod.GET)
+    public UserConversation getConversation(
+            Authentication authentication,
+            @RequestParam("otherUserEmail") String otherUserEmail
+    ) {
+        // Get User from Authentication
+        User user = (User) authentication.getPrincipal();
+
+        // Get otherUser by email
+        User otherUser = userService.getUserByEmail(otherUserEmail);
+
+        // Find conversation for that user
+        return userConversationService.findConversationWithMembers(
+            List.of(user, otherUser)
+        );
+    }
 
     @MessageMapping("/private-message")
     public void receivePrivateMessage(Authentication authentication, @Payload ChatMessageDTO chatMessageDTO){
