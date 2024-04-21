@@ -1,5 +1,8 @@
 package com.it120p.carehub.model.entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,11 +21,13 @@ public class Offer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long offerId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "service_provider_id")
     private User serviceProvider;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "request_id")
     private Request request;
 

@@ -40,7 +40,7 @@ public class User implements UserDetails {
     private LocalDate birthDate;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(nullable = true)
+    @JoinColumn(nullable = true, name = "user_photo_resource")
     private Resource photoResource;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
