@@ -23,7 +23,9 @@ public class RequestController {
     @PostMapping
     public RequestDTO createCustomerRequest(
             Authentication authentication,
-            @RequestParam("requestDetails") String requestDetails
+            @RequestParam("requestTitle") String requestTitle,
+            @RequestParam("requestDetails") String requestDetails,
+            @RequestParam("requestLocation") String requestLocation
     ) throws Exception {
         // Get User from Authentication
         User user = (User) authentication.getPrincipal();
@@ -39,7 +41,9 @@ public class RequestController {
 
         // Create new Request
         Request newRequest = Request.builder()
+                .requestTitle(requestTitle)
                 .requestDetails(requestDetails)
+                .requestLocation(requestLocation)
                 .requestStatus(RequestStatus.OPEN)
                 .customer(user)
                 .build();
