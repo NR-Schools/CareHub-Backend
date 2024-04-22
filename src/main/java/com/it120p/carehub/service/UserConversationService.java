@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.it120p.carehub.model.entity.ChatMessage;
 import com.it120p.carehub.model.entity.User;
 import com.it120p.carehub.model.entity.UserConversation;
+import com.it120p.carehub.repository.ChatMessageRepository;
 import com.it120p.carehub.repository.UserConversationRepository;
 
 @Service
@@ -17,6 +18,9 @@ public class UserConversationService {
     
     @Autowired
     private UserConversationRepository userConversationRepository;
+
+    @Autowired
+    private ChatMessageRepository chatMessageRepository;
 
     public UserConversation findConversationWithMembers(List<User> members) {
 
@@ -38,13 +42,13 @@ public class UserConversationService {
         return optConversation.get();
     }
 
-    public void addMessageToConversation(long conversationId, ChatMessage chatMessage) {
+    public ChatMessage addMessageToConversation(long conversationId, ChatMessage chatMessage) {
 
         // Try getting conversation by id
         Optional<UserConversation> optionalConversation = userConversationRepository.findById(conversationId);
 
         // If conversation doesn't exist, do not proceed
-        if (optionalConversation.isEmpty()) return;
+        if (optionalConversation.isEmpty()) return null;
 
         UserConversation conversation = optionalConversation.get();
 
@@ -53,10 +57,16 @@ public class UserConversationService {
             conversation.setMessages(List.of());
         }
 
+        // Save Message
+        ChatMessage savedChatMessage = chatMessageRepository.save(chatMessage);
+
         // Add chat message
         conversation.getMessages().add(chatMessage);
 
         // Save Conversation
         userConversationRepository.save(conversation);
+
+        // Return chat message
+        return savedChatMessage;
     }
 }

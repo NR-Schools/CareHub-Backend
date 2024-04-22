@@ -2,19 +2,27 @@ package com.it120p.carehub.model.dto;
 
 import java.time.LocalDateTime;
 
+import com.it120p.carehub.model.entity.ChatMessage;
+
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
 public class ChatMessageDTO {
-    private long conversationId;
-    private String senderUser;
-    private String receiverUser;
+    private long messageId;
+    private ChatUserDTO senderUser;
+    private ChatUserDTO receiverUser;
     private String messageText;
     private LocalDateTime timestamp;
 
-    // Add this for status check if this is a join or a message
-    public enum Status { JOIN, MESSAGE }
-    private Status status;
+    public static ChatMessageDTO fromChatMessage(ChatMessage chatMessage) {
+        return ChatMessageDTO.builder()
+                .messageId(chatMessage.getMessageId())
+                .senderUser(ChatUserDTO.fromUser(chatMessage.getSender()))
+                .receiverUser(ChatUserDTO.fromUser(chatMessage.getReceiver()))
+                .messageText(chatMessage.getPayload())
+                .timestamp(chatMessage.getTimestamp())
+                .build();
+    }
 }
