@@ -11,20 +11,20 @@ import lombok.Data;
 @Builder
 public class UserConversationDTO {
     private long conversationId;
-    private List<ChatUserDTO> userConversationMemberDTO;
-    private List<ChatMessageDTO> chatMessageDTO;
+    private List<ChatUserDTO> members;
+    private List<ChatMessageDTO> messages;
 
     public static UserConversationDTO fromConversation(UserConversation conversation) {
         return UserConversationDTO.builder()
                 .conversationId(conversation.getConversationId())
-                .userConversationMemberDTO(
+                .members(
                     conversation
-                        .getMember()
+                        .getMembers()
                         .stream()
                         .map(ChatUserDTO::fromUser)
                         .toList()
                 )
-                .chatMessageDTO(
+                .messages(
                     conversation
                         .getMessages()
                         .stream()

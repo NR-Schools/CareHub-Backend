@@ -2,7 +2,6 @@ package com.it120p.carehub.model.entity;
 
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +30,7 @@ public class UserConversation {
         joinColumns = @JoinColumn(name = "user_conversation_id"), 
         inverseJoinColumns = @JoinColumn(name = "member_id")
     )
-    private List<User> member;
+    private List<User> members = List.of();
 
     @ManyToMany(
         fetch = FetchType.LAZY
@@ -41,5 +40,5 @@ public class UserConversation {
         joinColumns = @JoinColumn(name = "user_conversation_id"), 
         inverseJoinColumns = @JoinColumn(name = "message_id")
     )
-    private List<ChatMessage> messages;
+    private List<ChatMessage> messages = List.of();
 }

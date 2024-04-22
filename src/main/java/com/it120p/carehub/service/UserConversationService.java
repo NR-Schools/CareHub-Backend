@@ -2,6 +2,7 @@ package com.it120p.carehub.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Streamable;
@@ -29,13 +30,39 @@ public class UserConversationService {
 
         // Find conversation with provided members
         Optional<UserConversation> optConversation = userConversations.stream()
-            .filter(userConversation -> userConversation.getMember().containsAll(members))
+            .filter(userConversation -> {
+                List<User> membersExt = userConversation.getMembers();
+                
+                // Compare by userId
+                List<Long> userIds_members = membersExt
+                                                .stream()
+                                                .map(member -> member.getUserId())
+                                                .toList();
+                List<Long> userIds_attempts  = members
+                                                .stream()
+                                                .map(member -> member.getUserId())
+                                                .toList();
+                
+                // Compare
+                return userIds_members
+                        .stream()
+                        .filter(e -> !userIds_attempts.contains(e))
+                        .toList()
+                        .isEmpty()
+                        &&
+                       userIds_attempts
+                        .stream()
+                        .filter(e -> !userIds_members.contains(e))
+                        .toList()
+                        .isEmpty();
+
+            })
             .findFirst();
-        
+            
         // Create new if empty
         if (optConversation.isEmpty()) {
             UserConversation userConversation = new UserConversation();
-            userConversation.setMember(members);
+            userConversation.setMembers(members);
             return userConversationRepository.save(userConversation);
         }
 
