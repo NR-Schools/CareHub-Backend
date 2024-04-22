@@ -25,7 +25,7 @@ public class Offer {
     @JoinColumn(name = "service_provider_id")
     private User serviceProvider;
 
-    @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
+    @ManyToOne(optional = false, cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "request_id")
     private Request request;
