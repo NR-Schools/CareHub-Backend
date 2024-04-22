@@ -153,7 +153,7 @@ public class OfferController {
         Request request = offer.getRequest();
 
         // Check if request customer is the same with user
-        if (!request.getCustomer().equals(user))
+        if (request.getCustomer().getUserId() != user.getUserId())
             throw new PermissionException("User");
 
         // Change Status of Request and Offer
