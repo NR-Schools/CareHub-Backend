@@ -42,39 +42,6 @@ public class AuthController {
     @Autowired
     private VerificationService verificationService;
 
-
-    @PostMapping("/register")
-    public UserInfoDTO registerAccount(
-            @RequestParam(name = "name") String name,
-            @RequestParam(name = "email") String email,
-            @RequestParam(name = "password") String password,
-            @RequestParam(name = "contactNo") String contactNo,
-            @RequestParam(name = "birthDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthDate,
-            @RequestPart(name = "profilePic", required = false) MultipartFile profilePic
-    ) throws Exception {
-
-        // Check if email is unique
-        if (userService.isUserExistByEmail(email)) {
-            throw new AlreadyExistException("Email");
-        }
-
-        // Initial Registration of email
-        User newUser = authService.registerUser(email, password);
-
-        // Update User
-        newUser.setName(name);
-        newUser.setContactNo(contactNo);
-        newUser.setBirthDate(birthDate);
-        if (profilePic != null) newUser.setPhotoResource( resourceService.setUserResource(profilePic) );
-        User updateUser = userService.updateUser(newUser);
-
-        // Send Verification Code
-        verificationService.sendVerificationCode(updateUser);
-
-        // Return DTO
-        return UserInfoDTO.fromUser(updateUser);
-    }
-
     @PostMapping("/register/customer")
     public UserInfoDTO registerCustomer(
             @RequestParam(name = "name") String name,

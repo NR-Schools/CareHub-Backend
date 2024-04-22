@@ -3,7 +3,6 @@ package com.it120p.carehub.controller;
 import com.it120p.carehub.exceptions.MissingException;
 import com.it120p.carehub.model.dto.UserInfoDTO;
 import com.it120p.carehub.model.entity.User;
-import com.it120p.carehub.model.entity.UserServiceCare;
 import com.it120p.carehub.service.ResourceService;
 import com.it120p.carehub.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,41 +82,4 @@ public class UserController {
         return UserInfoDTO.fromUser(updatedUser);
     }
 
-
-    @PostMapping("/service")
-    public UserInfoDTO setUserService(
-            Authentication authentication,
-            @RequestParam("type") String type,
-            @RequestParam("description") String description,
-            @RequestParam("offerings") List<String> offerings
-    ) {
-
-        // Get User from Authentication
-        User user = (User) authentication.getPrincipal();
-
-        // Set Service
-        UserServiceCare userServiceCare = UserServiceCare.builder()
-                .type(type)
-                .description(description)
-                .offerings(offerings)
-                .build();
-        user.setUserServiceCare(userServiceCare);
-
-        User updatedUser = userService.updateUser(user);
-        return UserInfoDTO.fromUser(updatedUser);
-    }
-
-    @DeleteMapping("service")
-    public UserInfoDTO deleteUserService(
-            Authentication authentication
-    ) {
-        // Get User from Authentication
-        User user = (User) authentication.getPrincipal();
-
-        // Remove UserServiceCare
-        user.setUserServiceCare(null);
-
-        User updatedUser = userService.updateUser(user);
-        return UserInfoDTO.fromUser(updatedUser);
-    }
 }
