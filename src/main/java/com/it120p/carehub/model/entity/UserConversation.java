@@ -24,8 +24,7 @@ public class UserConversation {
     private long conversationId;
 
     @ManyToMany(
-        fetch = FetchType.LAZY,
-        cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH }
+        fetch = FetchType.LAZY
     )
     @JoinTable(
         name = "conversation_member_mapping",
@@ -35,8 +34,7 @@ public class UserConversation {
     private List<User> member;
 
     @ManyToMany(
-        fetch = FetchType.LAZY,
-        cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH }
+        fetch = FetchType.LAZY
     )
     @JoinTable(
         name = "conversation_messages_mapping",
