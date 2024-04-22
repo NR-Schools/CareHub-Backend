@@ -29,7 +29,7 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long requestId;
 
-    @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "customer_id")
     private User customer;
 

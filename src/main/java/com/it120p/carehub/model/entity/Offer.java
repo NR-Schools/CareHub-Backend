@@ -21,7 +21,7 @@ public class Offer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long offerId;
 
-    @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "service_provider_id")
     private User serviceProvider;
 
