@@ -22,7 +22,6 @@ public class Offer {
     private long offerId;
 
     @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "service_provider_id")
     private User serviceProvider;
 

@@ -28,7 +28,6 @@ public class Request {
     private long requestId;
 
     @ManyToOne(optional = false, cascade = CascadeType.REMOVE)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "customer_id")
     private User customer;
 
