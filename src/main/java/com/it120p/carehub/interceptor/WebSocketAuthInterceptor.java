@@ -63,8 +63,6 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
                     accessor.setUser(authToken);
                 }
             }
-        
-            System.out.println("authorizationHeader");
         }
 
         return message;
