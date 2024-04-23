@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 
 import com.it120p.carehub.model.entity.User;
 import com.it120p.carehub.model.entity.Verification;
-import com.it120p.carehub.repository.VerificationCodeRepository;
+import com.it120p.carehub.repository.VerificationRepository;
 
 @Service
 public class VerificationService {
 
     @Autowired
-    private VerificationCodeRepository verificationCodeRepository;
+    private VerificationRepository verificationRepository;
 
     @Autowired
     private EmailService emailService;
@@ -38,29 +38,23 @@ public class VerificationService {
         emailService.sendVerificationMail(user.getEmail(), code);
 
         // Add to verification table
-        verificationCodeRepository.save(
+        verificationRepository.save(
                 Verification.builder()
                         .user(user)
                         .code(code)
-                        .expiryDate(
-                                LocalDateTime.now().plusMinutes(15)
-                        )
                         .build()
         );
     }
 
     public boolean attemptVerifyCode(User user, String code) {
         // Check user from repository
-        Verification verificationCode = verificationCodeRepository.findVerificationCodeByUser(user).orElseThrow();
-
-        // Check date if not expired
-        //if (verificationCode.getExpiryDate().isAfter(LocalDateTime.now())) return false;
+        Verification verificationCode = verificationRepository.findVerificationCodeByUser(user).orElseThrow();
     
         // Check code
         boolean status =  verificationCode.getCode().equals(code);
 
         // Remove verification entry if successful
-        if (status) verificationCodeRepository.delete(verificationCode);
+        if (status) verificationRepository.delete(verificationCode);
 
         // Return status
         return status;

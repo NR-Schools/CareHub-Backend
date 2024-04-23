@@ -23,7 +23,5 @@ public class Verification {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn
     private User user;
-    
     private String code;
-    private LocalDateTime expiryDate;
 }

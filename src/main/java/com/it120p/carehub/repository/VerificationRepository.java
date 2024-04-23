@@ -10,7 +10,7 @@ import com.it120p.carehub.model.entity.User;
 import com.it120p.carehub.model.entity.Verification;
 
 @Repository
-public interface VerificationCodeRepository extends CrudRepository<Verification, Long> {
+public interface VerificationRepository extends CrudRepository<Verification, Long> {
 
     @Query("SELECT verify FROM Verification verify WHERE verify.user = ?1")
     Optional<Verification> findVerificationCodeByUser(User user);
