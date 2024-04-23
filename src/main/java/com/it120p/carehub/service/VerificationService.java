@@ -57,6 +57,12 @@ public class VerificationService {
         //if (verificationCode.getExpiryDate().isAfter(LocalDateTime.now())) return false;
     
         // Check code
-        return verificationCode.getCode().equals(code);
+        boolean status =  verificationCode.getCode().equals(code);
+
+        // Remove verification entry if successful
+        if (status) verificationCodeRepository.delete(verificationCode);
+
+        // Return status
+        return status;
     }
 }
