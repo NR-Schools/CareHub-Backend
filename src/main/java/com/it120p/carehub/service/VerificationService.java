@@ -19,7 +19,7 @@ public class VerificationService {
     private EmailService emailService;
 
     public static String generateRandomString(int length) {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        String characters = "0123456789";
         StringBuilder result = new StringBuilder();
         SecureRandom random = new SecureRandom();
         for (int i = 0; i < length; i++) {
@@ -32,7 +32,7 @@ public class VerificationService {
     public void sendVerificationCode(User user) {
 
         // Generate code
-        String code = generateRandomString(5);
+        String code = generateRandomString(6);
 
         // Send email
         emailService.sendVerificationMail(user.getEmail(), code);
