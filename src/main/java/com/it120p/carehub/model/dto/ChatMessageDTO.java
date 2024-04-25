@@ -10,6 +10,8 @@ import lombok.Data;
 @Data
 @Builder
 public class ChatMessageDTO {
+    private long conversationId;
+
     private long messageId;
     private ChatUserDTO senderUser;
     private ChatUserDTO receiverUser;

@@ -22,6 +22,10 @@ public class UserConversationService {
     @Autowired
     private ChatMessageRepository chatMessageRepository;
 
+    public UserConversation getConversationById(long conversationId) {
+        return userConversationRepository.findById(conversationId).orElseThrow();
+    }
+
     public UserConversation findConversationWithMembers(List<User> members) {
 
         // Get all conversations

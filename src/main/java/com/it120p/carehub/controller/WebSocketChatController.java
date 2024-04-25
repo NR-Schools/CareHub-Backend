@@ -8,7 +8,6 @@ import com.it120p.carehub.service.UserConversationService;
 import com.it120p.carehub.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -49,7 +48,7 @@ public class WebSocketChatController {
         chatMessage.setTimestamp(LocalDateTime.now());              // Timestamp auto gen
 
         // Get Conversation
-        UserConversation userConversation = userConversationService.findConversationWithMembers(List.of(receiver));
+        UserConversation userConversation = userConversationService.getConversationById(chatMessageDTO.getConversationId());
         
         // Add message to Conversation
         userConversationService.addMessageToConversation(userConversation.getConversationId(), chatMessage);
@@ -60,8 +59,7 @@ public class WebSocketChatController {
         
         // Send to Conversation Id
         simpMessagingTemplate.convertAndSendToUser(String.valueOf(userConversation.getConversationId()) ,"/private", responseChatMessageDTO);
-        System.out.println("Hello World");
-        System.out.println(userConversation.getConversationId());
+
         return responseChatMessageDTO;
     }
 }
