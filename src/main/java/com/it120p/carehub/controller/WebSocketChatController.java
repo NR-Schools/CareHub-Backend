@@ -31,7 +31,7 @@ public class WebSocketChatController {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/private-message")
-    public void receivePrivateMessage(Authentication authentication, @Payload ChatMessageDTO chatMessageDTO){
+    public ChatMessageDTO receivePrivateMessage(Authentication authentication, @Payload ChatMessageDTO chatMessageDTO){
         
         // Get user (sender)
         User user = (User) authentication.getPrincipal();
@@ -39,7 +39,7 @@ public class WebSocketChatController {
         // Get receiver from chatMessageDTO
         User receiver = userService.getUserByEmail(chatMessageDTO.getReceiverUser().getEmail());
 
-        if (receiver == null) return;
+        if (receiver == null) return null;
 
         // Build ChatMessage object
         ChatMessage chatMessage = new ChatMessage();
@@ -56,8 +56,12 @@ public class WebSocketChatController {
 
         // Construct DTO
         ChatMessageDTO responseChatMessageDTO = ChatMessageDTO.fromChatMessage(chatMessage);
-
+        
+        
         // Send to Conversation Id
         simpMessagingTemplate.convertAndSendToUser(String.valueOf(userConversation.getConversationId()) ,"/private", responseChatMessageDTO);
+        System.out.println("Hello World");
+        System.out.println(userConversation.getConversationId());
+        return responseChatMessageDTO;
     }
 }

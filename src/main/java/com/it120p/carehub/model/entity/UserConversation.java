@@ -23,7 +23,7 @@ public class UserConversation {
     private long conversationId;
 
     @ManyToMany(
-        fetch = FetchType.LAZY
+        fetch = FetchType.EAGER
     )
     @JoinTable(
         name = "conversation_member_mapping",
@@ -33,7 +33,7 @@ public class UserConversation {
     private List<User> members = List.of();
 
     @ManyToMany(
-        fetch = FetchType.LAZY
+        fetch = FetchType.EAGER
     )
     @JoinTable(
         name = "conversation_messages_mapping",

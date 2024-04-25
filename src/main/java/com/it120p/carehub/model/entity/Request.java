@@ -30,6 +30,7 @@ public class Request {
     private User customer;
 
     private String requestTitle;
+    @Column(length = 5000)
     private String requestDetails;
     private String requestLocation;
 
