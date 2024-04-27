@@ -58,9 +58,11 @@ public class User implements UserDetails {
     private boolean isUserActivated = false;
 
     @CreatedDate
+    @Column(columnDefinition = "DATETIME")
     private LocalDateTime createdDate;
 
     @LastModifiedDate
+    @Column(columnDefinition = "DATETIME")
     private LocalDateTime lastModifiedDate;
 
 

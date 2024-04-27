@@ -2,6 +2,7 @@ package com.it120p.carehub.model.entity;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,5 +30,7 @@ public class ChatMessage {
     private User receiver;
 
     private String payload;
+
+    @Column(columnDefinition = "DATETIME")
     private LocalDateTime timestamp;
 }
