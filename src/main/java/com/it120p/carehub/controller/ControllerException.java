@@ -3,9 +3,11 @@ package com.it120p.carehub.controller;
 import com.it120p.carehub.exceptions.BaseException;
 import com.it120p.carehub.model.ErrorResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@CrossOrigin(origins = "*")
 @RestControllerAdvice
 public class ControllerException {
 
